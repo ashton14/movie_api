@@ -26,11 +26,23 @@ def get_character(id: str):
     * `number_of_lines_together`: The number of lines the character has with the
       originally queried character.
     """
+
+
     for character in db.characters:
         if character["character_id"] == id:
             print("character found")
 
-    json = None
+            top_convos = []
+
+
+            json = {
+                "character_id": character["character_id"],
+                "character": character["name"],
+                "movie": character["movie_id"],
+                "gender": character["gender"],
+                "top conversations": top_convos
+            }
+            
 
     if json is None:
         raise HTTPException(status_code=404, detail="movie not found.")
