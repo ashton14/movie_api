@@ -77,7 +77,7 @@ def get_character(id: str):
                         continue    
 
                 else:
-                    if convo_id.__len__ > 0:     
+                    if len(convo_id) > 0:     
                         for char in db.characters:
                             if char["character_id"] == c2id:
                                 c2name = char["name"]
