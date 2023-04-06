@@ -33,8 +33,7 @@ def get_character(id: str):
             print("character found")
 
             top_convos = []
-            numLines = 0
-            c2id = 0
+            numLines, c2id, c2name, c2gender = 0, 0, "", ""
             
 
             for conversation in db.conversations:
