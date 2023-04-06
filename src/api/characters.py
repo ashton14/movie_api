@@ -58,13 +58,13 @@ def get_character(id: str):
               }
             top_convos.append(convo)
 
-            json = {
-                "character_id": character["character_id"],
-                "character": character["name"],
-                "movie": character["movie_id"],
-                "gender": character["gender"],
-                "top conversations": top_convos
-            }
+        json = {
+            "character_id": character["character_id"],
+            "character": character["name"],
+            "movie": character["movie_id"],
+            "gender": character["gender"],
+            "top conversations": top_convos
+        }
             
 
     if json is None:
