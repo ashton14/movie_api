@@ -47,7 +47,7 @@ def get_character(id: str):
 
             top_convos = []
 
-            numLines, c2id, c2name, c2gender = 0, 0, "", ""
+            convo_id, numLines, c2id, c2name, c2gender = [], 0, 0, "", ""
               
             for conversation in db.conversations:
                 if conversation["character1_id"] == id:
@@ -57,7 +57,8 @@ def get_character(id: str):
             for conversation in db.conversations:
                 if conversation["character1_id"] == id:
                     if conversation["character2_id"] == c2id:
-                        numLines += 1
+                        if conversation["conversation_id"] not in convo_id:
+                            convo_id.append(conversation["conversation_id"])
                     else:
                         for char in db.characters:
                             if char["character_id"] == c2id:
@@ -76,12 +77,18 @@ def get_character(id: str):
                         continue    
 
                 else:
-                    if numLines > 0:     
+                    if convo_id.__len__ > 0:     
                         for char in db.characters:
                             if char["character_id"] == c2id:
                                 c2name = char["name"]
                                 c2gender = char["gender"]
-                                                
+
+                        for c in convo_id:
+                            numLines = 0
+                            for line in db.lines:
+                                if line["conversation_id"] == c:
+                                    if line["character_id"] == c2id:
+                                        numLines += 1
                         convo = {
                             "character_id": c2id,
                             "character": c2name,
@@ -90,6 +97,7 @@ def get_character(id: str):
                         }
                         top_convos.append(convo)
                         break
+                                
 
             json["top conversations"] = top_convos
             
