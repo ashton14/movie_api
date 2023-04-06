@@ -77,25 +77,26 @@ def get_character(id: str):
                         continue    
 
                 else:
-                    if len(convo_id) > 0:     
-                        for char in db.characters:
-                            if char["character_id"] == c2id:
-                                c2name = char["name"]
-                                c2gender = char["gender"]
-
+                    if len(convo_id) > 0: 
                         for c in convo_id:
-                            numLines = 0
                             for line in db.lines:
                                 if line["conversation_id"] == c:
                                     if line["character_id"] == c2id:
                                         numLines += 1
-                        convo = {
-                            "character_id": c2id,
-                            "character": c2name,
-                            "gender": c2gender,
-                            "number_of_lines_together": numLines
-                        }
-                        top_convos.append(convo)
+                            
+                            for char in db.characters:
+                                if char["character_id"] == c2id:
+                                    c2name = char["name"]
+                                    c2gender = char["gender"]
+
+                            convo = {
+                                "character_id": c2id,
+                                "character": c2name,
+                                "gender": c2gender,
+                                "number_of_lines_together": numLines
+                            }
+                            
+                            top_convos.append(convo)
                         break
                                 
 
