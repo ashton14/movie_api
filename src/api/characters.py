@@ -27,45 +27,56 @@ def get_character(id: str):
       originally queried character.
     """
 
+    json = None
 
     for character in db.characters:
         if character["character_id"] == id:
             print("character found")
-
-            top_convos = []
-            numLines, c2id, c2name, c2gender = 0, 0, "", ""
-            
-
-            for conversation in db.conversations:
-                if conversation["character1_id"] == id:
-                    c2id = conversation["character2_id"]
-                    break
-                
-                        
-            for conversation in db.conversations:
-                if conversation["character1_id"] == id and conversation["character2_id"] == c2id:
-                    numLines += 1
-
-            for char in db.characters:
-                if char["character_id"] == c2id:
-                    c2name = char["name"]
-                    c2gender = char["gender"]
-                            
-            convo = {
-                "character_id": c2id,
-                "character": c2name,
-                "gender": c2gender,
-                "number_of_lines_together": numLines
-              }
-            top_convos.append(convo)
-
             json = {
                "character_id": character["character_id"],
                 "character": character["name"],
                 "movie": character["movie_id"],
                 "gender": character["gender"],
-                "top conversations": top_convos
+                "top conversations": []
             }
+            top_convos = []
+
+            for convo in db.conversations:
+                numLines, c2id, c2name, c2gender = 0, 0, "", ""
+                if conversation["character1_id"] == id:
+                        c2id = conversation["character2_id"]
+                
+
+                for conversation in db.conversations:
+                    if conversation["character1_id"] == id:
+                        c2id = conversation["character2_id"]
+                        break
+                    
+                            
+                for conversation in db.conversations:
+                    if conversation["character1_id"] == id:
+                        if conversation["character2_id"] == c2id:
+                            numLines += 1
+                        else:
+                            for char in db.characters:
+                                if char["character_id"] == c2id:
+                                    c2name = char["name"]
+                                    c2gender = char["gender"]
+                                        
+                            convo = {
+                                "character_id": c2id,
+                                "character": c2name,
+                                "gender": c2gender,
+                                "number_of_lines_together": numLines
+                              }
+                            top_convos.append(convo)
+                            numLines = 1
+                            c2id = conversation["character2_id"]
+                            continue
+
+                
+
+        json["top conversations"] = top_convos
             
 
     if json is None:
