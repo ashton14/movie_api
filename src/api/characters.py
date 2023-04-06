@@ -32,6 +32,7 @@ def get_character(id: str):
     for character in db.characters:
         if character["character_id"] == id:
             print("character found")
+  
             json = {
                "character_id": character["character_id"],
                 "character": character["name"],
@@ -39,6 +40,11 @@ def get_character(id: str):
                 "gender": character["gender"],
                 "top conversations": []
             }
+
+            for movie in db.movies:
+                if movie["movie_id"] == character["movie_id"]:
+                    json["movie"] = movie["title"]
+
             top_convos = []
 
             numLines, c2id, c2name, c2gender = 0, 0, "", ""
@@ -63,11 +69,27 @@ def get_character(id: str):
                             "character": c2name,
                             "gender": c2gender,
                             "number_of_lines_together": numLines
-                          }
+                        }
                         top_convos.append(convo)
                         numLines = 1
                         c2id = conversation["character2_id"]
-                        continue     
+                        continue    
+
+                else:
+                    if numLines > 0:     
+                        for char in db.characters:
+                            if char["character_id"] == c2id:
+                                c2name = char["name"]
+                                c2gender = char["gender"]
+                                                
+                        convo = {
+                            "character_id": c2id,
+                            "character": c2name,
+                            "gender": c2gender,
+                            "number_of_lines_together": numLines
+                        }
+                        top_convos.append(convo)
+                        break
 
             json["top conversations"] = top_convos
             
