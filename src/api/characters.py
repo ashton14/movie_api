@@ -34,6 +34,7 @@ def get_character(id: str):
 
             top_convos = []
             numLines, c2id = 0
+            
 
             for conversation in db.conversations:
                 if conversation["character1_id"] == id:
@@ -49,12 +50,13 @@ def get_character(id: str):
                     c2name = char["name"]
                     c2gender = char["gender"]
                             
-                    top_convos.append({
-                        "character_id": c2id,
-                        "character": c2name,
-                        "gender": c2gender,
-                        "number_of_lines_together": numLines
-                    })
+            convo = {
+                "character_id": c2id,
+                "character": c2name,
+                "gender": c2gender,
+                "number_of_lines_together": numLines
+              }
+            top_convos.append(convo)
 
             json = {
                 "character_id": character["character_id"],
