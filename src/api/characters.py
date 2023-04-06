@@ -69,7 +69,7 @@ def get_character(id: str):
                         c2id = conversation["character2_id"]
                         continue     
 
-        json["top conversations"] = top_convos
+            json["top conversations"] = top_convos
             
 
     if json is None:
