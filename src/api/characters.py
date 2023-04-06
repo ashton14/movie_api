@@ -38,8 +38,9 @@ def get_character(id: str):
 
             for conversation in db.conversations:
                 if conversation["character1_id"] == id:
-                    c2id == conversation["character2_id"]
+                    c2id = conversation["character2_id"]
                     break
+                
                         
             for conversation in db.conversations:
                 if conversation["character1_id"] == id and conversation["character2_id"] == c2id:
