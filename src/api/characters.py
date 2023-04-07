@@ -4,7 +4,22 @@ from src import database as db
 
 router = APIRouter()
 
+def topConversations(id: str): 
+    
+    top_convos = []
+    for conversation in db.conversations:
+        if conversation["character1_id"] == id:
+            c2id = conversation["character2_id"]
 
+        for conversation in db.conversations:
+            if conversation["character1_id"] == id:
+                if conversation["character2_id"] == id:
+                    if conversation["conversation_id"] not in top_convos:
+                        top_convos.append(conversation["conversation_id"])
+    
+    return top_convos
+        
+            
 @router.get("/characters/{id}", tags=["characters"])
 def get_character(id: str):
     """
@@ -38,7 +53,7 @@ def get_character(id: str):
                 "character": character["name"],
                 "movie": character["movie_id"],
                 "gender": character["gender"],
-                "top conversations": []
+                "top conversations": topConversations(id)
             }
 
             for movie in db.movies:
@@ -100,7 +115,7 @@ def get_character(id: str):
                         break
                                 
 
-            json["top conversations"] = top_convos
+            #json["top conversations"] = top_convos
             
 
     if json is None:
