@@ -7,26 +7,7 @@ router = APIRouter()
 def topConversations(id: str): 
     
     top_convos = []
-    c2id, c2name, c2gender = 0,0,0
-    for conversation in db.conversations:
-        if conversation["character1_id"] == id:
-            c2id = conversation["character2_id"]
-            for char in db.characters:
-                if char["character_id"] == c2id:
-                    c2name = char["name"]
-                    c2gender = char["gender"]
-
-        for conversation in db.conversations:
-            if conversation["character1_id"] == id:
-                if conversation["character2_id"] == c2id:
-                    convo = {
-                            "character_id": c2id,
-                            "character": c2name,
-                            "gender": c2gender,
-                            "number_of_lines_together": 1
-                            }
-                    if convo not in top_convos:
-                        top_convos.append(convo)
+    
     
     return top_convos
         
@@ -53,82 +34,15 @@ def get_character(id: str):
       originally queried character.
     """
 
-    json = None
+    json = {
+        "character_id": id,
+        "character": db.characters[id][0],
+        "movie": db.characters[id][1],
+        "gender": db.characters[id][2],
+        "top_conversations": topConversations(id)
+    }
 
-    for character in db.characters:
-        if character["character_id"] == id:
-            print("character found")
-  
-            json = {
-               "character_id": character["character_id"],
-                "character": character["name"],
-                "movie": character["movie_id"],
-                "gender": character["gender"],
-                "top conversations": topConversations(id)
-            }
-
-            for movie in db.movies:
-                if movie["movie_id"] == character["movie_id"]:
-                    json["movie"] = movie["title"]
-
-#            top_convos = []
-#
- #           convo_id, numLines, c2id, c2name, c2gender = [], 0, 0, "", ""
-  #            
-   #         for conversation in db.conversations:
-    #            if conversation["character1_id"] == id:
-    #                c2id = conversation["character2_id"]
-    #                break                    
-    #                        
-    #        for conversation in db.conversations:
-    #            if conversation["character1_id"] == id:
-    #                if conversation["character2_id"] == c2id:
-    #                    if conversation["conversation_id"] not in convo_id:
-    #                        convo_id.append(conversation["conversation_id"])
-    #                else:
-    #                    for char in db.characters:
-    #                        if char["character_id"] == c2id:
-    #                            c2name = char["name"]
-    #                            c2gender = char["gender"]
-    #                                    
-    #                    convo = {
-    #                        "character_id": c2id,
-    #                        "character": c2name,
-    #                        "gender": c2gender,
-    #                        "number_of_lines_together": numLines
-    #                    }
-    #                    top_convos.append(convo)
-    #                    numLines = 1
-    #                    c2id = conversation["character2_id"]
-    #                    continue    
-    #
-    #            else:
-    #                if len(convo_id) > 0: 
-    #                    for c in convo_id:
-    #                        for line in db.lines:
-    #                            if line["conversation_id"] == c:
-    #                                if line["character_id"] == c2id:
-    #                                    numLines += 1
-    #                        
-    #                        for char in db.characters:
-    #                            if char["character_id"] == c2id:
-    #                                c2name = char["name"]
-    #                                c2gender = char["gender"]
-#
-#                            convo = {
-#                                "character_id": c2id,
-#                                "character": c2name,
-#                                "gender": c2gender,
-#                                "number_of_lines_together": numLines
-#                            }
-#                            
-#                            top_convos.append(convo)
-#                        break
-#                                
-
-            #json["top conversations"] = top_convos
-            
-
+    
     if json is None:
         raise HTTPException(status_code=404, detail="movie not found.")
 

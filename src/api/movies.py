@@ -4,6 +4,15 @@ from src import database as db
 
 router = APIRouter()
 
+def topCharacters(id: str):
+
+    top_characters = []
+    for char in db.characters:
+        if char[1] == id:
+            top_characters.append(char)
+
+    return top_characters
+
 
 # include top 3 actors by number of lines
 @router.get("/movies/{movie_id}", tags=["movies"])
@@ -23,9 +32,12 @@ def get_movie(movie_id: str):
 
     """
 
-    for movie in db.movies:
-        if movie["movie_id"] == id:
-            print("movie found")
+    
+    json =  {
+        "movie_id": id,
+        "title": db.movies[id][0],
+        "top_characters": topCharacters(id)
+    }
 
     json = None
 

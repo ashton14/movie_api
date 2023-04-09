@@ -7,25 +7,33 @@ import csv
 print("reading movies")
 
 with open("movies.csv", mode="r", encoding="utf8") as csv_file:
-    movies = [
-        {k: v for k, v in row.items()}
-        for row in csv.DictReader(csv_file, skipinitialspace=True)
-    ]
+    reader = csv.reader(csv_file)
+    movies = {}
+    for row in reader:
+        key = row[0]
+        values = row[1:]
+        movies[key] = values
 
 with open("characters.csv", mode="r", encoding="utf8") as csv_file:
-    characters = [
-        {k: v for k, v in row.items()}
-        for row in csv.DictReader(csv_file, skipinitialspace=True)
-    ]
+    reader = csv.reader(csv_file)
+    characters = {}
+    for row in reader:
+        key = row[0]
+        values = row[1:]
+        characters[key] = values
 
 with open("conversations.csv", mode="r", encoding="utf8") as csv_file:
-    conversations = [
-        {k: v for k, v in row.items()}
-        for row in csv.DictReader(csv_file, skipinitialspace=True)
-    ]
+    reader = csv.reader(csv_file)
+    conversations = {}
+    for row in reader:
+        key = row[0]
+        values = row[1:]
+        conversations[key] = values
 
 with open("lines.csv", mode="r", encoding="utf8") as csv_file:
-    lines = [
-        {k: v for k, v in row.items()}
-        for row in csv.DictReader(csv_file, skipinitialspace=True)
-    ]
+    reader = csv.reader(csv_file)
+    lines = {}
+    for row in reader:
+        key = row[0]
+        values = row[1:]
+        lines[key] = values
