@@ -8,8 +8,26 @@ def topConversations(id: str):
     
     top_convos = []
     
-    
+    for convo in db.conversations:
+        if convo[0] == id:
+            convo = {
+                "character_id": convo[1],
+                "character": db.characters[convo[1]][0],
+                "gender": db.characters[convo[1]][2],
+                "number_of_lines_together": num_lines_together(convo, convo[1])
+            }
+        top_convos.append(convo)
+
     return top_convos
+
+def num_lines_together(convo: int, id: str):
+
+    numLines = 0
+    for line in db.lines:
+        if line[2] == convo and line[0] == id:
+            numLines += 1
+
+    return numLines
         
             
 @router.get("/characters/{id}", tags=["characters"])
