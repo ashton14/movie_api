@@ -7,6 +7,7 @@ router = APIRouter()
 def topConversations(id: str): 
     
     top_convos = []
+    c2id, c2name, c2gender = 0,0,0
     for conversation in db.conversations:
         if conversation["character1_id"] == id:
             c2id = conversation["character2_id"]
