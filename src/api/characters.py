@@ -10,12 +10,22 @@ def topConversations(id: str):
     for conversation in db.conversations:
         if conversation["character1_id"] == id:
             c2id = conversation["character2_id"]
+            for char in db.characters:
+                if char["character_id"] == c2id:
+                    c2name = char["name"]
+                    c2gender = char["gender"]
 
         for conversation in db.conversations:
             if conversation["character1_id"] == id:
-                if conversation["character2_id"] == id:
-                    if conversation["conversation_id"] not in top_convos:
-                        top_convos.append(conversation["conversation_id"])
+                if conversation["character2_id"] == c2id:
+                    convo = {
+                            "character_id": c2id,
+                            "character": c2name,
+                            "gender": c2gender,
+                            "number_of_lines_together": 1
+                            }
+                    if convo not in top_convos:
+                        top_convos.append(convo)
     
     return top_convos
         
@@ -60,60 +70,60 @@ def get_character(id: str):
                 if movie["movie_id"] == character["movie_id"]:
                     json["movie"] = movie["title"]
 
-            top_convos = []
-
-            convo_id, numLines, c2id, c2name, c2gender = [], 0, 0, "", ""
-              
-            for conversation in db.conversations:
-                if conversation["character1_id"] == id:
-                    c2id = conversation["character2_id"]
-                    break                    
-                            
-            for conversation in db.conversations:
-                if conversation["character1_id"] == id:
-                    if conversation["character2_id"] == c2id:
-                        if conversation["conversation_id"] not in convo_id:
-                            convo_id.append(conversation["conversation_id"])
-                    else:
-                        for char in db.characters:
-                            if char["character_id"] == c2id:
-                                c2name = char["name"]
-                                c2gender = char["gender"]
-                                        
-                        convo = {
-                            "character_id": c2id,
-                            "character": c2name,
-                            "gender": c2gender,
-                            "number_of_lines_together": numLines
-                        }
-                        top_convos.append(convo)
-                        numLines = 1
-                        c2id = conversation["character2_id"]
-                        continue    
-
-                else:
-                    if len(convo_id) > 0: 
-                        for c in convo_id:
-                            for line in db.lines:
-                                if line["conversation_id"] == c:
-                                    if line["character_id"] == c2id:
-                                        numLines += 1
-                            
-                            for char in db.characters:
-                                if char["character_id"] == c2id:
-                                    c2name = char["name"]
-                                    c2gender = char["gender"]
-
-                            convo = {
-                                "character_id": c2id,
-                                "character": c2name,
-                                "gender": c2gender,
-                                "number_of_lines_together": numLines
-                            }
-                            
-                            top_convos.append(convo)
-                        break
-                                
+#            top_convos = []
+#
+ #           convo_id, numLines, c2id, c2name, c2gender = [], 0, 0, "", ""
+  #            
+   #         for conversation in db.conversations:
+    #            if conversation["character1_id"] == id:
+    #                c2id = conversation["character2_id"]
+    #                break                    
+    #                        
+    #        for conversation in db.conversations:
+    #            if conversation["character1_id"] == id:
+    #                if conversation["character2_id"] == c2id:
+    #                    if conversation["conversation_id"] not in convo_id:
+    #                        convo_id.append(conversation["conversation_id"])
+    #                else:
+    #                    for char in db.characters:
+    #                        if char["character_id"] == c2id:
+    #                            c2name = char["name"]
+    #                            c2gender = char["gender"]
+    #                                    
+    #                    convo = {
+    #                        "character_id": c2id,
+    #                        "character": c2name,
+    #                        "gender": c2gender,
+    #                        "number_of_lines_together": numLines
+    #                    }
+    #                    top_convos.append(convo)
+    #                    numLines = 1
+    #                    c2id = conversation["character2_id"]
+    #                    continue    
+    #
+    #            else:
+    #                if len(convo_id) > 0: 
+    #                    for c in convo_id:
+    #                        for line in db.lines:
+    #                            if line["conversation_id"] == c:
+    #                                if line["character_id"] == c2id:
+    #                                    numLines += 1
+    #                        
+    #                        for char in db.characters:
+    #                            if char["character_id"] == c2id:
+    #                                c2name = char["name"]
+    #                                c2gender = char["gender"]
+#
+#                            convo = {
+#                                "character_id": c2id,
+#                                "character": c2name,
+#                                "gender": c2gender,
+#                                "number_of_lines_together": numLines
+#                            }
+#                            
+#                            top_convos.append(convo)
+#                        break
+#                                
 
             #json["top conversations"] = top_convos
             
