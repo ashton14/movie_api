@@ -6,9 +6,10 @@ router = APIRouter()
 
 def topConversations(id: str): 
     
-    top_convos = []
     
     for convo in db.conversations:
+        top_convos = []
+        
         if convo[0] == id:
             convo = {
                 "character_id": convo[1],
@@ -20,7 +21,7 @@ def topConversations(id: str):
 
     return top_convos
 
-def num_lines_together(convo: int, id: str):
+def num_lines_together(convo: str, id: str):
 
     numLines = 0
     for line in db.lines:
