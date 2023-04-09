@@ -6,15 +6,15 @@ router = APIRouter()
 
 def topConversations(id: str): 
     
-    
-    for convo in db.conversations:
-        top_convos = []
-        
-        if convo[0] == id:
+    top_convos = []
+
+    for convo, value in db.conversations.items():
+
+        if value[0] == id:
             convo = {
-                "character_id": convo[1],
-                "character": db.characters[convo[1]][0],
-                "gender": db.characters[convo[1]][2],
+                "character_id": value[1],
+                "character": db.characters[value[1]][0],
+                "gender": db.characters[value[1]][2],
                 #"number_of_lines_together": num_lines_together(convo, convo[1])
             }
             top_convos.append(convo)
@@ -56,7 +56,7 @@ def get_character(id: str):
     json = {
         "character_id": id,
         "character": db.characters[id][0],
-        "movie": db.characters[id][1],
+        "movie": db.movies[db.characters[id][1]][0],
         "gender": db.characters[id][2],
         "top_conversations": topConversations(id)
     }
