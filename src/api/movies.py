@@ -7,14 +7,42 @@ router = APIRouter()
 def topCharacters(id: str):
 
     top_characters = []
-    for char in db.characters:
-        if char[1] == id:
+    for character, value in db.characters.items():
+        if value[1] == id:
+            char = {
+                "character_id": character,
+                "character": value[0],
+                "num_lines": num_lines(id, character)
+            }
+
             top_characters.append(char)
 
-    return top_characters
+    return get_top_five(top_characters)
 
 
-# include top 3 actors by number of lines
+def num_lines(movie_id: str, character_id: str):
+
+    numLines = 0
+
+    for line in db.lines.values():
+        if line[1] == movie_id and line[0] == character_id:
+            numLines += 1
+
+    return numLines
+
+
+def get_top_five(characters: list):
+
+    top_characters = []
+    sorted_list = sorted(characters, key=lambda x: x["num_lines"], reverse=True)
+
+    for i in range(5):
+        top_characters.append(sorted_list[i])
+
+    return reversed(top_characters)
+
+
+# include top 5 actors by number of lines
 @router.get("/movies/{movie_id}", tags=["movies"])
 def get_movie(movie_id: str):
     """
