@@ -115,7 +115,7 @@ def list_characters(
     number of results to skip before returning results.
     """
 
-    characters = db.characters
+    characters = dict(db.characters)
 
     for char in characters.values():
         char.pop()
@@ -123,7 +123,7 @@ def list_characters(
         char.append(0)
 
     for line in db.lines.values():
-        characters[line[0]][2] +=1
+        characters[line[0]][2] += 1
 
     json = []
 
