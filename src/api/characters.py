@@ -8,7 +8,7 @@ def topConversations(id: str):
     
     top_convos = []
 
-    for convo, value in db.conversations.items():
+    for conversaton, value in db.conversations.items():
 
         if value[0] == id:
             convo = {
@@ -32,8 +32,8 @@ def topConversations(id: str):
 def num_lines_together(convo: str, id: str):
 
     numLines = 0
-    for line in db.lines.values:
-        if line[2] == convo and line[0] == id:
+    for line, value in db.lines.items():
+        if value[2] == convo and value[0] == id:
             numLines += 1
 
     return numLines
