@@ -139,8 +139,7 @@ def list_characters(
         json.append(char)
 
 
-    if name != "":
-        filtered_list_by_name = [c for c in json if name in c["character"]] 
+    filtered_list_by_name = [c for c in json if name in c["character"]] 
 
     if sort == "character":
         sorted_list = sorted(filtered_list_by_name, key=lambda x: x["character"])   
