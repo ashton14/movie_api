@@ -136,7 +136,7 @@ def list_characters(
     if sort == "number_of_lines":
         sorted_list = sorted(filtered_list_by_name, key=lambda x: x["number_of_lines"])   
 
-    return json
+    return sorted_list
 
 def num_movie_lines(movie_id: str, character_id: str):
         
