@@ -67,7 +67,6 @@ def get_movie(movie_id: str):
         "top_characters": topCharacters(id)
     }
 
-    json = None
 
     if json is None:
         raise HTTPException(status_code=404, detail="movie not found.")
