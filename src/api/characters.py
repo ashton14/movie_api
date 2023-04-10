@@ -125,11 +125,11 @@ def list_characters(
         characters[char] = new_char
 
     for line in db.lines.values():
-        new_char[line[0]][2] += 1
+        characters[line[0]][2] += 1
 
     json = []
 
-    for character, value in new_char.items():
+    for character, value in characters.items():
         char = {
             "character_id": character,
             "character": value[0],
