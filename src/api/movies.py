@@ -118,8 +118,7 @@ def list_movies(
         }
         json.append(m)
 
-    if name != "":
-        filtered_list_by_name = [m for m in json if name in m["movie_title"]] 
+    filtered_list_by_name = [m for m in json if name in m["movie_title"]] 
 
     if sort == "movie_title":
         sorted_list = sorted(filtered_list_by_name, key=lambda x: x["movie_title"])   
