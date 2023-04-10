@@ -10,6 +10,8 @@ def topConversations(id: str):
 
     for conversaton, value in db.conversations.items():
 
+        dup = False
+
         if value[0] == id:
             convo = {
                 "character_id": value[1],
@@ -24,16 +26,18 @@ def topConversations(id: str):
             for c in top_convos:
                 if c["character_id"] == value[1]:
                     c["number_of_lines_together"] += conversaton["number_of_lines_together"]
-                else:
-                    top_convos.append(convo)
+                    dup = True
+                    break
+            if dup ==  False:
+                top_convos.append(convo)
 
     return top_convos
 
 def num_lines_together(convo: str, id: str):
 
     numLines = 0
-    for line in db.lines:
-        if line["line_id"][2] == convo and line["line_id"][0] == id:
+    for value in db.lines.values():
+        if value[2] == convo and value[0] == id:
             numLines += 1
 
     return numLines
