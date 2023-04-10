@@ -146,7 +146,7 @@ def list_characters(
     if sort == "movie":
         sorted_list = sorted(filtered_list_by_name, key=lambda x: x["movie"]) 
     if sort == "number_of_lines":
-        sorted_list = sorted(filtered_list_by_name, key=lambda x: x["number_of_lines"])[::1]   
+        sorted_list = sorted(filtered_list_by_name, key=lambda x: x["number_of_lines"])[::-1]   
 
     return sorted_list[offset:limit]
 
