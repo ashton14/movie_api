@@ -20,7 +20,7 @@ def topConversations(id: str):
             if len(top_convos) == 0:
                 top_convos.append(convo)
                 continue
-            
+
             for c in top_convos:
                 if c["character_id"] == value[1]:
                     c["number_of_lines_together"] += convo["number_of_lines_together"]
@@ -32,7 +32,7 @@ def topConversations(id: str):
 def num_lines_together(convo: str, id: str):
 
     numLines = 0
-    for line in db.lines:
+    for line in db.lines.values:
         if line[2] == convo and line[0] == id:
             numLines += 1
 
