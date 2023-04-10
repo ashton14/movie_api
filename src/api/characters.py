@@ -25,7 +25,7 @@ def topConversations(id: str):
 
             for c in top_convos:
                 if c["character_id"] == value[1]:
-                    c["number_of_lines_together"] += conversaton["number_of_lines_together"]
+                    c["number_of_lines_together"] += convo["number_of_lines_together"]
                     dup = True
                     break
             if dup ==  False:
