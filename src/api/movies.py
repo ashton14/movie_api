@@ -126,6 +126,6 @@ def list_movies(
     if sort == "year":
         sorted_list = sorted(filtered_list_by_name, key=lambda x: x["year"]) 
     if sort == "rating":
-        sorted_list = sorted(filtered_list_by_name, key=lambda x: x["rating"])   
+        sorted_list = sorted(filtered_list_by_name, key=lambda x: x["imdb_rating"])   
 
     return sorted_list[offset:limit]
