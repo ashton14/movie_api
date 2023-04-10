@@ -17,7 +17,7 @@ def topConversations(id: str):
                 "character_id": value[1],
                 "character": db.characters[value[1]][0],
                 "gender": db.characters[value[1]][2],
-                "number_of_lines_together": num_lines_together(conversaton, conversaton[1])
+                "number_of_lines_together": num_lines_together(conversaton, value[1])
             }
             if len(top_convos) == 0:
                 top_convos.append(convo)
