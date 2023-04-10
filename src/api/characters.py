@@ -115,16 +115,27 @@ def list_characters(
     number of results to skip before returning results.
     """
 
+    characters = db.characters
+
+    for char in characters.values():
+        char.pop()
+        char.pop()
+        char.append(0)
+
+    for line in db.lines.values():
+        characters[line[0]][2] +=1
+
     json = []
 
-    for character, value in db.characters.items():
+    for character, value in characters.items():
         char = {
             "character_id": character,
             "character": value[0],
             "movie": db.movies[value[1]][0],
-            "number_of_lines": num_movie_lines(value[1], character)
+            "number_of_lines": value[2]
         }
         json.append(char)
+
 
     if name != "":
         filtered_list_by_name = [c for c in json if name in c["character"]] 
@@ -138,8 +149,8 @@ def list_characters(
 
     return sorted_list[offset:limit]
 
-def num_movie_lines(movie_id: str, character_id: str):
+#def num_movie_lines(movie_id: str, character_id: str):
         
-        num_lines = sum(1 for l in db.lines.values() if l[1] == movie_id and l[0] == character_id)
-        
-        return num_lines
+        #num_lines = sum(1 for l in db.lines.values() if l[1] == movie_id and l[0] == character_id)
+
+        #return num_lines
