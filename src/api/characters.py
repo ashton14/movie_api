@@ -140,9 +140,6 @@ def list_characters(
 
 def num_movie_lines(movie_id: str, character_id: str):
         
-        num_lines = 0
-        for line in db.lines.values():
-            if line[1] == movie_id and line[0] == character_id:
-                num_lines += 1
-
+        num_lines = sum(1 for l in db.lines.values() if l[1] == movie_id and l[0] == character_id)
+        
         return num_lines
