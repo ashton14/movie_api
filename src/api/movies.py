@@ -62,9 +62,9 @@ def get_movie(movie_id: str):
 
     
     json =  {
-        "movie_id": id,
-        "title": db.movies[id][0],
-        "top_characters": topCharacters(id)
+        "movie_id": movie_id,
+        "title": db.movies[movie_id][0],
+        "top_characters": topCharacters(movie_id)
     }
 
 
