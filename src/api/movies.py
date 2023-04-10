@@ -33,13 +33,9 @@ def num_lines(movie_id: str, character_id: str):
 
 def get_top_five(characters: list):
 
-    top_characters = []
     sorted_list = sorted(characters, key=lambda x: x["num_lines"], reverse=True)
 
-    for i in range(5):
-        top_characters.append(sorted_list[i])
-
-    return reversed(top_characters)
+    return sorted_list[:5]
 
 
 # include top 5 actors by number of lines
