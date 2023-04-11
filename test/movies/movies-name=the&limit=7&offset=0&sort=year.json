@@ -1,0 +1,51 @@
+[
+    {
+      "movie_id": 610,
+      "movie_title": "the wizard of oz",
+      "year": "1939",
+      "imdb_rating": 8.3,
+      "imdb_votes": 104873
+    },
+    {
+      "movie_id": 558,
+      "movie_title": "the third man",
+      "year": "1949",
+      "imdb_rating": 8.5,
+      "imdb_votes": 51872
+    },
+    {
+      "movie_id": 465,
+      "movie_title": "on the waterfront",
+      "year": "1954",
+      "imdb_rating": 8.4,
+      "imdb_votes": 42010
+    },
+    {
+      "movie_id": 509,
+      "movie_title": "the searchers",
+      "year": "1956",
+      "imdb_rating": 8.1,
+      "imdb_votes": 30138
+    },
+    {
+      "movie_id": 246,
+      "movie_title": "the apartment",
+      "year": "1960",
+      "imdb_rating": 8.4,
+      "imdb_votes": 37301
+    },
+    {
+      "movie_id": 208,
+      "movie_title": "the birds",
+      "year": "1963",
+      "imdb_rating": 7.9,
+      "imdb_votes": 53233
+    },
+    {
+      "movie_id": 536,
+      "movie_title": "dr. strangelove or: how i learned to stop worrying and love the bomb",
+      "year": "1964",
+      "imdb_rating": 8.6,
+      "imdb_votes": 158529
+    }
+  ]

@@ -1,0 +1,31 @@
+{
+    "movie_id": 13,
+    "title": "airplane!",
+    "top_characters": [
+      {
+        "character_id": 198,
+        "character": "ELAINE",
+        "num_lines": 50
+      },
+      {
+        "character_id": 214,
+        "character": "STRIKER",
+        "num_lines": 45
+      },
+      {
+        "character_id": 197,
+        "character": "DR. RUMACK",
+        "num_lines": 24
+      },
+      {
+        "character_id": 210,
+        "character": "RANDY",
+        "num_lines": 17
+      },
+      {
+        "character_id": 209,
+        "character": "OVEUR",
+        "num_lines": 15
+      }
+    ]
+  }
