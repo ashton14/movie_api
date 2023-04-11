@@ -32,7 +32,7 @@ def topConversations(id: str):
                 top_convos.append(convo)
         
 
-    return sorted(top_convos, key=lambda x: x["number_of_lines"])[::-1]
+    return sorted(top_convos, key=lambda x: x["number_of_lines_together"])[::-1]
 
 def num_lines_together(convo: str, id: str):
 
