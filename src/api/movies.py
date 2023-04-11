@@ -56,6 +56,8 @@ def get_movie(movie_id: str):
 
     """
 
+    if movie_id not in db.movies:
+        raise HTTPException(status_code=404, detail="movie not found.")
     
     json =  {
         "movie_id": int(movie_id),

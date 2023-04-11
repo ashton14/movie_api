@@ -16,7 +16,7 @@ def topConversations(id: str):
             convo = {
                 "character_id": int(value[1]),
                 "character": db.characters[value[1]][0],
-                "gender": db.characters[value[1]][2],
+                "gender": db.characters[value[1]][2] if db.characters[value[1]][2] != "" else None,
                 "number_of_lines_together": num_lines_together(conversaton, value[1])
             }
             if len(top_convos) == 0:
@@ -24,12 +24,13 @@ def topConversations(id: str):
                 continue
 
             for c in top_convos:
-                if c["character_id"] == value[1]:
+                if c["character_id"] == convo["character_id"]:
                     c["number_of_lines_together"] += convo["number_of_lines_together"]
                     dup = True
                     break
             if dup == False:
                 top_convos.append(convo)
+        
 
     return top_convos
 
@@ -37,7 +38,7 @@ def num_lines_together(convo: str, id: str):
 
     numLines = 0
     for value in db.lines.values():
-        if value[2] == convo and value[0] == id:
+        if value[2] == convo:
             numLines += 1
 
     return numLines
@@ -66,13 +67,13 @@ def get_character(id: str):
     """
     
     if id not in db.characters:
-        raise ValueError("Invalid character ID.")
+        raise HTTPException(status_code=404, detail="character not found.")
     
     json = {
         "character_id": int(id),
         "character": db.characters[id][0],
         "movie": db.movies[db.characters[id][1]][0],
-        "gender": db.characters[id][2],
+        "gender": db.characters[id][2] if db.characters[id][2] != "" else None,
         "top_conversations": topConversations(id)
     }
 

@@ -14,6 +14,13 @@ def test_get_character():
     with open("test/characters/7421.json", encoding="utf-8") as f:
         assert response.json() == json.load(f)
 
+def test_get_character1():
+    response = client.get("/characters/7421")
+    assert response.status_code == 200
+
+    with open("test/characters/7421.json", encoding="utf-8") as f:
+        assert response.json() == json.load(f)
+
 
 def test_characters():
     response = client.get("/characters/")
@@ -36,6 +43,6 @@ def test_sort_filter():
         assert response.json() == json.load(f)
 
 
-#def test_404():
- #   response = client.get("/characters/400")
-  #  assert response.status_code == 404
+def test_404():
+    response = client.get("/characters/400")
+    assert response.status_code == 404
