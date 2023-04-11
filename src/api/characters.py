@@ -14,7 +14,7 @@ def topConversations(id: str):
 
         if value[0] == id:
             convo = {
-                "character_id": value[1],
+                "character_id": int(value[1]),
                 "character": db.characters[value[1]][0],
                 "gender": db.characters[value[1]][2],
                 "number_of_lines_together": num_lines_together(conversaton, value[1])
@@ -28,7 +28,7 @@ def topConversations(id: str):
                     c["number_of_lines_together"] += convo["number_of_lines_together"]
                     dup = True
                     break
-            if dup ==  False:
+            if dup == False:
                 top_convos.append(convo)
 
     return top_convos
@@ -64,9 +64,12 @@ def get_character(id: str):
     * `number_of_lines_together`: The number of lines the character has with the
       originally queried character.
     """
-
+    
+    if id not in db.characters:
+        raise ValueError("Invalid character ID.")
+    
     json = {
-        "character_id": id,
+        "character_id": int(id),
         "character": db.characters[id][0],
         "movie": db.movies[db.characters[id][1]][0],
         "gender": db.characters[id][2],
@@ -124,14 +127,19 @@ def list_characters(
         new_char.append(0)
         characters[char] = new_char
 
+    del characters["character_id"]
+    
     for line in db.lines.values():
+        if line[0] == "character_id":
+            continue
         characters[line[0]][2] += 1
 
     json = []
 
     for character, value in characters.items():
+        
         char = {
-            "character_id": character,
+            "character_id": int(character),
             "character": value[0],
             "movie": db.movies[value[1]][0],
             "number_of_lines": value[2]
@@ -139,7 +147,7 @@ def list_characters(
         json.append(char)
 
 
-    filtered_list_by_name = [c for c in json if name in c["character"]] 
+    filtered_list_by_name = [c for c in json if name.lower() in c["character"].lower() and c["character"] != ""] 
 
     if sort == "character":
         sorted_list = sorted(filtered_list_by_name, key=lambda x: x["character"])   
@@ -149,9 +157,3 @@ def list_characters(
         sorted_list = sorted(filtered_list_by_name, key=lambda x: x["number_of_lines"])[::-1]   
 
     return sorted_list[offset:limit]
-
-#def num_movie_lines(movie_id: str, character_id: str):
-        
-        #num_lines = sum(1 for l in db.lines.values() if l[1] == movie_id and l[0] == character_id)
-
-        #return num_lines

@@ -10,7 +10,7 @@ def topCharacters(id: str):
     for character, value in db.characters.items():
         if value[1] == id:
             char = {
-                "character_id": character,
+                "character_id": int(character),
                 "character": value[0],
                 "num_lines": num_lines(id, character)
             }
@@ -58,7 +58,7 @@ def get_movie(movie_id: str):
 
     
     json =  {
-        "movie_id": movie_id,
+        "movie_id": int(movie_id),
         "title": db.movies[movie_id][0],
         "top_characters": topCharacters(movie_id)
     }
@@ -109,12 +109,14 @@ def list_movies(
     json = []
 
     for movie, value in db.movies.items():
+        if(movie == "movie_id"):
+            continue
         m = {
-            "movie_id": movie,
+            "movie_id": int(movie),
             "movie_title": value[0],
             "year": value[1],
-            "imdb_rating": value[2],
-            "imdb_votes": value[3]
+            "imdb_rating": float(value[2]),
+            "imdb_votes": float(value[3])
         }
         json.append(m)
 

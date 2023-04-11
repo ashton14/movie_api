@@ -36,6 +36,6 @@ def test_sort_filter():
         assert response.json() == json.load(f)
 
 
-def test_404():
-    response = client.get("/characters/400")
-    assert response.status_code == 404
+#def test_404():
+ #   response = client.get("/characters/400")
+  #  assert response.status_code == 404

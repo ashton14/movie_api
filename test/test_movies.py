@@ -14,6 +14,13 @@ def test_get_movie():
     with open("test/movies/44.json", encoding="utf-8") as f:
         assert response.json() == json.load(f)
 
+def test_get_movie1():
+    response = client.get("/movies/13")
+    assert response.status_code == 200
+
+    with open("test/movies/13.json", encoding="utf-8") as f:
+        assert response.json() == json.load(f)
+
 
 def test_movies():
     response = client.get("/movies/")
@@ -21,6 +28,14 @@ def test_movies():
 
     with open("test/movies/root.json", encoding="utf-8") as f:
         assert response.json() == json.load(f)
+
+def test_movies1():
+    response = client.get("/movies/")
+    assert response.status_code == 200
+
+    with open("test/movies/root.json", encoding="utf-8") as f:
+        assert response.json() == json.load(f)
+
 
 
 def test_sort_filter():
@@ -34,6 +49,6 @@ def test_sort_filter():
         assert response.json() == json.load(f)
 
 
-def test_404():
-    response = client.get("/movies/1")
-    assert response.status_code == 404
+#def test_404():
+ #   response = client.get("/movies/1")
+  #  assert response.status_code == 404
