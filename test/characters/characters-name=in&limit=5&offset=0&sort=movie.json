@@ -1,0 +1,32 @@
+[
+    {
+      "character_id": 102,
+      "character": "DINO",
+      "movie": "8mm",
+      "number_of_lines": 7
+    },
+    {
+      "character_id": 103,
+      "character": "DINO VELVET",
+      "movie": "8mm",
+      "number_of_lines": 34
+    },
+    {
+      "character_id": 4557,
+      "character": "CHECK-IN",
+      "movie": "a clockwork orange",
+      "number_of_lines": 5
+    },
+    {
+      "character_id": 4561,
+      "character": "DOLIN",
+      "movie": "a clockwork orange",
+      "number_of_lines": 8
+    },
+    {
+      "character_id": 4569,
+      "character": "MINISTER",
+      "movie": "a clockwork orange",
+      "number_of_lines": 23
+    }
+  ]

@@ -1,0 +1,20 @@
+{
+    "character_id": 105,
+    "character": "EDDIE",
+    "movie": "8mm",
+    "gender": "M",
+    "top_conversations": [
+      {
+        "character_id": 114,
+        "character": "WELLES",
+        "gender": "M",
+        "number_of_lines_together": 68
+      },
+      {
+        "character_id": 107,
+        "character": "MALE VOICE",
+        "gender": null,
+        "number_of_lines_together": 7
+      }
+    ]
+  }

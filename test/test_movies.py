@@ -30,10 +30,10 @@ def test_movies():
         assert response.json() == json.load(f)
 
 def test_movies1():
-    response = client.get("/movies/")
+    response = client.get("/movies/?name=the&limit=7&offset=0&sort=year")
     assert response.status_code == 200
 
-    with open("test/movies/root.json", encoding="utf-8") as f:
+    with open("test/movies/movies-name=the&limit=7&offset=0&sort=year.json", encoding="utf-8") as f:
         assert response.json() == json.load(f)
 
 
