@@ -33,12 +33,14 @@ def get_line(id: str):
     """
     
     if id not in db.characters:
-        raise HTTPException(status_code=404, detail="character not found.")
+        raise HTTPException(status_code=404, detail="line not found.")
     
-    words = re.split("[.,!?- ;:\"\']+", db.lines[id][4])
+    delimiters = '[.,!?\\- ;:\\/\"\']+'
+    words = re.split(delimiters, db.lines[id][4])
+    words = [word for word in words if word != '']
     num_words = len(words)
 
-    sentences = re.split("[.?!]+", db.lines[id][4])
+    sentences = re.split('[.?!]+', db.lines[id][4])
     num_sentences = len(sentences)
 
     line_info = {
