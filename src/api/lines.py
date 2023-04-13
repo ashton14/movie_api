@@ -35,12 +35,11 @@ def get_line(id: str):
     if id not in db.characters:
         raise HTTPException(status_code=404, detail="line not found.")
     
-    delimiters = '[.,!?\\- ;:\\/\"\']+'
-    words = re.split(delimiters, db.lines[id][4])
-    words = [word for word in words if word != '']
+    words = re.findall(r'\w+', db.lines[id][4])
     num_words = len(words)
 
     sentences = re.split('[.?!]+', db.lines[id][4])
+    sentences = [s for s in sentences if s != '']
     num_sentences = len(sentences)
 
     line_info = {
@@ -51,6 +50,7 @@ def get_line(id: str):
 
     json = {
         "line_id": int(id),
+        "line": db.lines[id],
         "character": db.characters[db.lines[id][0]][0],
         "age": db.characters[db.lines[id][0]][3] if db.characters[db.lines[id][0]][3] != "" else None,
         "movie": db.movies[db.lines[id][1]][0],
