@@ -32,7 +32,7 @@ def get_line(id: str):
     * `num_other_lines`: The number of other lines in the same conversation
     """
     
-    if id not in db.characters:
+    if id not in db.lines:
         raise HTTPException(status_code=404, detail="line not found.")
     
     words = re.findall(r'\w+', db.lines[id][4])
@@ -50,7 +50,7 @@ def get_line(id: str):
 
     json = {
         "line_id": int(id),
-        "line": db.lines[id],
+        "line": db.lines[id][4],
         "character": db.characters[db.lines[id][0]][0],
         "age": db.characters[db.lines[id][0]][3] if db.characters[db.lines[id][0]][3] != "" else None,
         "movie": db.movies[db.lines[id][1]][0],
@@ -119,4 +119,4 @@ def list_lines(
     if sort == "text":
         sorted_list = sorted(filtered_list, key=lambda x: x["text"])
 
-    return sorted_list
+    return sorted_list[offset:limit]
