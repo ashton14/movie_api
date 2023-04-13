@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.api import characters, movies, pkg_util
+from src.api import characters, movies, lines, pkg_util
 
 description = """
 Movie API returns dialog statistics on top hollywood movies from decades past.
@@ -15,7 +15,14 @@ You can:
 You can:
 * **list movies with sorting and filtering options.**
 * **retrieve a specific movie by id**
+
+## Lines
+
+You can:
+* **list lines with sorting and filtering options.**
+* **retrieve a specific line by id**
 """
+
 tags_metadata = [
     {
         "name": "characters",
@@ -25,6 +32,10 @@ tags_metadata = [
         "name": "movies",
         "description": "Access information on top-rated movies.",
     },
+    {
+        "name": "lines",
+        "description": "Access information on lines in movies.",
+    }
 ]
 
 app = FastAPI(
@@ -39,6 +50,7 @@ app = FastAPI(
 )
 app.include_router(characters.router)
 app.include_router(movies.router)
+app.include_router(lines.router)
 app.include_router(pkg_util.router)
 
 
