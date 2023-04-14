@@ -186,7 +186,7 @@ def list_lines_from_source(
             raise HTTPException(status_code=404, detail="movie not found.")
             
         for l, v in db.lines.items():
-            if v[0] == id:
+            if v[1] == id:
                 line = {
                     "line_id": l,
                     "text": v[4],
