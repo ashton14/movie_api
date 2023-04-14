@@ -14,7 +14,7 @@ def other_lines(id: str):
     return num_lines
         
             
-@router.get("/lines/{id}", tags=["lines"])
+@router.get("/lines/from_source/{id}", tags=["lines"])
 def get_line(id: str):
     """
     This endpoint returns a single line by its identifier. For each line
