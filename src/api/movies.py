@@ -131,4 +131,4 @@ def list_movies(
     if sort == "rating":
         sorted_list = sorted(filtered_list_by_name, key=lambda x: x["imdb_rating"])[::-1]  
 
-    return sorted_list[offset:limit]
+    return sorted_list[offset:limit + offset]

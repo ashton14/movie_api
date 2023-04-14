@@ -157,4 +157,4 @@ def list_characters(
     if sort == "number_of_lines":
         sorted_list = sorted(filtered_list_by_name, key=lambda x: x["number_of_lines"])[::-1]   
 
-    return sorted_list[offset:limit]
+    return sorted_list[offset:limit + offset]

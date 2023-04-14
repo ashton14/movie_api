@@ -119,4 +119,80 @@ def list_lines(
     if sort == "text":
         sorted_list = sorted(filtered_list, key=lambda x: x["text"])
 
-    return sorted_list[offset:limit]
+    return sorted_list[offset:limit + offset]
+
+
+class line_source_options(str, Enum):
+    character = "character"
+    movie = "movie"
+
+@router.get("/lines/{source}", tags=["lines"])
+def list_lines_from_source(
+    name: str = "",
+    limit: int = 50,
+    offset: int = 0,
+    source: line_source_options = line_source_options.character,
+):
+    """
+    This endpoint returns a list of lines. For each line it returns:
+    * `line_id`: the internal id of the line. Can be used to query the
+      `/lines/{line_id}` endpoint.
+    * `text`: The text of the line.
+    * `movie`: The movie the line is from.
+    * `character`: The character that says the line.
+
+    You can filter for lines that come from either a character or movie 
+    by using the name query parameter and choosing the source. Input the exact name
+    of the character or movie to return the lines.
+
+    The `limit` and `offset` query
+    parameters are used for pagination. The `limit` query parameter specifies the
+    maximum number of results to return. The `offset` query parameter specifies the
+    number of results to skip before returning results.
+    """
+
+    lines = []
+    name_found = False
+
+    if source == "character":
+    
+        for character, value in db.characters.items:
+            if name == value[0]:
+                id = character
+                name_found = True
+                break
+
+        if name_found == False:
+            raise HTTPException(status_code=404, detail="character not found.")    
+        
+        for l, v in db.lines.items():
+            if v[0] == id:
+                line = {
+                    "line_id": l,
+                    "text": v[4],
+                    "movie": db.movies[v[1]][0],
+                    "character": db.characters[v[0]][0]
+                }
+                lines.append(line)
+
+    if source == "movie":
+        for movie, value in db.movies.items:
+            if name == value[0]:
+                id = movie
+                name_found == True
+                break
+
+        if name_found == False:
+            raise HTTPException(status_code=404, detail="movie not found.")
+            
+        for l, v in db.lines.items():
+            if v[0] == id:
+                line = {
+                    "line_id": l,
+                    "text": v[4],
+                    "movie": db.movies[id][0],
+                    "character": db.characters[v[0]][0]
+                }
+                lines.append(line)
+
+    return lines[offset : limit + offset]
