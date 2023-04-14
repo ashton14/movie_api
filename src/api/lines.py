@@ -14,7 +14,7 @@ def other_lines(id: str):
     return num_lines
         
             
-@router.get("/lines/from_source/{id}", tags=["lines"])
+@router.get("/lines/{id}", tags=["lines"])
 def get_line(id: str):
     """
     This endpoint returns a single line by its identifier. For each line
@@ -126,7 +126,7 @@ class line_source_options(str, Enum):
     character = "character"
     movie = "movie"
 
-@router.get("/lines/{name}", tags=["lines"])
+@router.get("/lines/from_source/{name}", tags=["lines"])
 def list_lines_from_source(
     name: str = "",
     limit: int = 50,
@@ -156,7 +156,7 @@ def list_lines_from_source(
 
     if source == "character":
     
-        for character, value in db.characters.items:
+        for character, value in db.characters.items():
             if name.lower() == value[0].lower():
                 id = character
                 name_found = True
@@ -176,7 +176,7 @@ def list_lines_from_source(
                 lines.append(line)
 
     if source == "movie":
-        for movie, value in db.movies.items:
+        for movie, value in db.movies.items():
             if name.lower() == value[0].lower():
                 id = movie
                 name_found == True
