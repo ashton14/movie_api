@@ -179,7 +179,7 @@ def list_lines_from_source(
         for movie, value in db.movies.items():
             if name.lower() == value[0].lower():
                 id = movie
-                name_found == True
+                name_found = True
                 break
 
         if name_found == False:
