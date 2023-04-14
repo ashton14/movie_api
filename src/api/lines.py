@@ -33,7 +33,7 @@ def get_line(id: str):
     """
     
     if id not in db.lines:
-        raise HTTPException(status_code=404, detail="liness not found.")
+        raise HTTPException(status_code=404, detail="line not found.")
     
     words = re.findall(r'\w+', db.lines[id][4])
     num_words = len(words)
@@ -126,7 +126,7 @@ class line_source_options(str, Enum):
     character = "character"
     movie = "movie"
 
-@router.get("/lines/{source}", tags=["lines"])
+@router.get("/lines/{name}", tags=["lines"])
 def list_lines_from_source(
     name: str = "",
     limit: int = 50,

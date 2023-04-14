@@ -21,6 +21,7 @@ You can:
 You can:
 * **list lines with sorting and filtering options.**
 * **retrieve a specific line by id**
+* **retreive all lines from a specified source
 """
 
 tags_metadata = [
