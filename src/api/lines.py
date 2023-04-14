@@ -33,7 +33,7 @@ def get_line(id: str):
     """
     
     if id not in db.lines:
-        raise HTTPException(status_code=404, detail="line not found.")
+        raise HTTPException(status_code=404, detail="liness not found.")
     
     words = re.findall(r'\w+', db.lines[id][4])
     num_words = len(words)
@@ -157,7 +157,7 @@ def list_lines_from_source(
     if source == "character":
     
         for character, value in db.characters.items:
-            if name == value[0]:
+            if name.lower() == value[0].lower():
                 id = character
                 name_found = True
                 break
@@ -177,7 +177,7 @@ def list_lines_from_source(
 
     if source == "movie":
         for movie, value in db.movies.items:
-            if name == value[0]:
+            if name.lower() == value[0].lower():
                 id = movie
                 name_found == True
                 break
