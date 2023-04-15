@@ -155,7 +155,7 @@ def list_lines_from_source(
     name_found = False
 
     if source == "character":
-    
+        print("["+name+"], ["+db.characters[4503][0]+"]")
         for character, value in db.characters.items():
             if name.lower() == value[0].lower():
                 id = character
@@ -176,6 +176,7 @@ def list_lines_from_source(
                 lines.append(line)
 
     if source == "movie":
+        print("["+name+"], ["+db.movies[341][0]+"]")
         for movie, value in db.movies.items():
             if name.lower() == value[0].lower():
                 id = movie
