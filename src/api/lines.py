@@ -159,13 +159,13 @@ def list_lines_from_source(
     if source == "character":
         
         for character, value in db.characters.items():
-            if name.lower() == value[0].lower():
+            if urllib.parse.unquote(name).lower() == value[0].lower():
                 id = character
                 name_found = True
                 break
 
         if name_found == False:
-            raise HTTPException(status_code=404, detail="character not found. ["+urllib.parse.unquote(name)+"], ["+db.characters["4503"][0]+"]")    
+            raise HTTPException(status_code=404, detail="character not found.")    
         
         for l, v in db.lines.items():
             if v[0] == id:
@@ -178,9 +178,9 @@ def list_lines_from_source(
                 lines.append(line)
 
     if source == "movie":
-        print("["+name+"], ["+db.movies[341][0]+"]")
+
         for movie, value in db.movies.items():
-            if name.lower() == value[0].lower():
+            if urllib.parse.unquote(name).lower() == value[0].lower():
                 id = movie
                 name_found = True
                 break
