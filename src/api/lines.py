@@ -155,7 +155,7 @@ def list_lines_from_source(
     name_found = False
 
     if source == "character":
-        print("["+name+"], ["+db.characters["4503"][0]+"]")
+        
         for character, value in db.characters.items():
             if name.lower() == value[0].lower():
                 id = character
@@ -163,7 +163,7 @@ def list_lines_from_source(
                 break
 
         if name_found == False:
-            raise HTTPException(status_code=404, detail="character not found.")    
+            raise HTTPException(status_code=404, detail="character not found. ["+name+"], ["+db.characters["4503"][0]+"]")    
         
         for l, v in db.lines.items():
             if v[0] == id:
