@@ -57,12 +57,12 @@ def test_line_by_source():
 
 def test_line_by_source1():
     response = client.get(
-        "/lines/?name=&source=character"
+        "/lines/?name=&source=movie"
     )
     assert response.status_code == 200
 
     with open(
-        "test/lines/name=veronica&source=character.json",
+        "test/lines/name=&source=movie.json",
         encoding="utf-8",
     ) as f:
         assert response.json() == json.load(f)
