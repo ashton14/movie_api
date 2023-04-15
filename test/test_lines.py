@@ -44,12 +44,12 @@ def test_lines1():
 
 def test_line_by_source():
     response = client.get(
-        "/lines/?name=veronica&source=character"
+        "/lines/from_source/veronica?limit=5&offset=0&source=character"
     )
     assert response.status_code == 200
 
     with open(
-        "test/lines/name=veronica&source=character.json",
+        "test/lines/name=veronica&limit=5&source=character.json",
         encoding="utf-8",
     ) as f:
         assert response.json() == json.load(f)
@@ -57,12 +57,12 @@ def test_line_by_source():
 
 def test_line_by_source1():
     response = client.get(
-        "/lines/?name=&source=movie"
+        "/lines/from_source/the exorcist?limit=4&source=movie"
     )
     assert response.status_code == 200
 
     with open(
-        "test/lines/name=&source=movie.json",
+        "test/lines/name=the exorcist&limit=4&source=movie.json",
         encoding="utf-8",
     ) as f:
         assert response.json() == json.load(f)
