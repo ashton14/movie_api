@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from enum import Enum
 from src import database as db
-import re
+import re, urllib.parse
+
+
 
 router = APIRouter()
 
@@ -163,7 +165,7 @@ def list_lines_from_source(
                 break
 
         if name_found == False:
-            raise HTTPException(status_code=404, detail="character not found. ["+name+"], ["+db.characters["4503"][0]+"]")    
+            raise HTTPException(status_code=404, detail="character not found. ["+urllib.parse.unquote(name)+"], ["+db.characters["4503"][0]+"]")    
         
         for l, v in db.lines.items():
             if v[0] == id:
