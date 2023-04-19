@@ -1,11 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from enum import Enum
 from src import database as db
+from fastapi.params import Query
 
 router = APIRouter()
 
 def topCharacters(id: str):
 
+<<<<<<< HEAD
     top_characters = []
     for character, value in db.characters.items():
         if value[1] == id:
@@ -39,8 +41,10 @@ def get_top_five(characters: list):
 
 
 # include top 5 actors by number of lines
+=======
+>>>>>>> upstream/main
 @router.get("/movies/{movie_id}", tags=["movies"])
-def get_movie(movie_id: str):
+def get_movie(movie_id: int):
     """
     This endpoint returns a single movie by its identifier. For each movie it returns:
     * `movie_id`: the internal id of the movie.
@@ -56,6 +60,7 @@ def get_movie(movie_id: str):
 
     """
 
+<<<<<<< HEAD
     if movie_id not in db.movies:
         raise HTTPException(status_code=404, detail="movie not found.")
     
@@ -65,11 +70,25 @@ def get_movie(movie_id: str):
         "top_characters": topCharacters(movie_id)
     }
 
+=======
+    movie = db.movies.get(movie_id)
+    if movie:
+        top_chars = [
+            {"character_id": c.id, "character": c.name, "num_lines": c.num_lines}
+            for c in db.characters.values()
+            if c.movie_id == movie_id
+        ]
+        top_chars.sort(key=lambda c: c["num_lines"], reverse=True)
 
-    if json is None:
-        raise HTTPException(status_code=404, detail="movie not found.")
+        result = {
+            "movie_id": movie_id,
+            "title": movie.title,
+            "top_characters": top_chars[0:5],
+        }
+        return result
+>>>>>>> upstream/main
 
-    return json
+    raise HTTPException(status_code=404, detail="movie not found.")
 
 
 class movie_sort_options(str, Enum):
@@ -82,8 +101,8 @@ class movie_sort_options(str, Enum):
 @router.get("/movies/", tags=["movies"])
 def list_movies(
     name: str = "",
-    limit: int = 50,
-    offset: int = 0,
+    limit: int = Query(50, ge=1, le=250),
+    offset: int = Query(0, ge=0),
     sort: movie_sort_options = movie_sort_options.movie_title,
 ):
     """
@@ -108,6 +127,7 @@ def list_movies(
     maximum number of results to return. The `offset` query parameter specifies the
     number of results to skip before returning results.
     """
+<<<<<<< HEAD
     json = []
 
     for movie, value in db.movies.items():
@@ -132,3 +152,35 @@ def list_movies(
         sorted_list = sorted(filtered_list_by_name, key=lambda x: x["imdb_rating"])[::-1]  
 
     return sorted_list[offset:limit + offset]
+=======
+    if name:
+
+        def filter_fn(m):
+            return m.title and name.lower() in m.title
+
+    else:
+
+        def filter_fn(_):
+            return True
+
+    items = list(filter(filter_fn, db.movies.values()))
+    if sort == movie_sort_options.movie_title:
+        items.sort(key=lambda m: m.title)
+    elif sort == movie_sort_options.year:
+        items.sort(key=lambda m: m.year)
+    elif sort == movie_sort_options.rating:
+        items.sort(key=lambda m: m.imdb_rating, reverse=True)
+
+    json = (
+        {
+            "movie_id": m.id,
+            "movie_title": m.title,
+            "year": m.year,
+            "imdb_rating": m.imdb_rating,
+            "imdb_votes": m.imdb_votes,
+        }
+        for m in items[offset : offset + limit]
+    )
+
+    return json
+>>>>>>> upstream/main
