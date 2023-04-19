@@ -62,38 +62,6 @@ def try_parse(type, val):
 
 
 with open("movies.csv", mode="r", encoding="utf8") as csv_file:
-<<<<<<< HEAD
-    reader = csv.reader(csv_file)
-    movies = {}
-    for row in reader:
-        key = row[0]
-        values = row[1:]
-        movies[key] = values
-
-with open("characters.csv", mode="r", encoding="utf8") as csv_file:
-    reader = csv.reader(csv_file)
-    characters = {}
-    for row in reader:
-        key = row[0]
-        values = row[1:]
-        characters[key] = values
-
-with open("conversations.csv", mode="r", encoding="utf8") as csv_file:
-    reader = csv.reader(csv_file)
-    conversations = {}
-    for row in reader:
-        key = row[0]
-        values = row[1:]
-        conversations[key] = values
-
-with open("lines.csv", mode="r", encoding="utf8") as csv_file:
-    reader = csv.reader(csv_file)
-    lines = {}
-    for row in reader:
-        key = row[0]
-        values = row[1:]
-        lines[key] = values
-=======
     movies = {
         try_parse(int, row["movie_id"]): Movie(
             try_parse(int, row["movie_id"]),
@@ -150,4 +118,3 @@ with open("lines.csv", mode="r", encoding="utf8") as csv_file:
         conv = conversations.get(line.conv_id)
         if conv:
             conv.num_lines += 1
->>>>>>> upstream/main
