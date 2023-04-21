@@ -83,6 +83,20 @@ def upload_new_conversation():
     )
 
 
+def upload_new_lines():
+    output = io.StringIO()
+    csv_writer = csv.DictWriter(
+        output, fieldnames=["line_id","character_id","movie_id","conversation_id","line_sort","line_text"]
+    )
+    csv_writer.writeheader()
+    csv_writer.writerows(char_lines)
+    supabase.storage.from_("movie-api").upload(
+        "lines.csv",
+        bytes(output.getvalue(), "utf-8"),
+        {"x-upsert": "true"},
+    )
+
+
 # END PLACEHOLDER CODE
 
 

@@ -52,10 +52,6 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
             raise HTTPException(status_code=422, detail="lines do not reference characters.")
         
 
-    print(conversation)
-    db.logs.append({"post_call_time": datetime.now(), "movie_id_added_to": movie_id})
-    db.upload_new_log()
-
     next_convo_id = db.conversations[next(reversed(db.conversations.keys()))].id + 1
 
     db.convos.append({"conversation_id": next_convo_id,
@@ -65,3 +61,21 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
                        })
     
     db.upload_new_conversation()
+
+    i = 1
+    line_sort = 1
+    for l in conversation.lines:
+
+        next_line_id = db.lines[next(reversed(db.lines.keys()))].id + i
+
+        db.char_lines.append({"line_id": next_line_id,
+                        "character_id": line.character_id,
+                        "movie_id": movie_id,
+                        "conversation_id": next_convo_id,
+                        "line_sort": line_sort,
+                        "line_text": line.line_text
+                        })
+        i += 1
+        line_sort += 1
+    
+    db.upload_new_lines()
