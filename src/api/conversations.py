@@ -55,3 +55,13 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
     print(conversation)
     db.logs.append({"post_call_time": datetime.now(), "movie_id_added_to": movie_id})
     db.upload_new_log()
+
+    next_convo_id = db.conversations[next(reversed(db.conversations.keys()))].id + 1
+
+    db.convos.append({"conversation_id": next_convo_id,
+                       "character1_id": conversation.character_1_id,
+                       "character2_id": conversation.character_2_id,
+                       "movie_id": movie_id
+                       })
+    
+    db.upload_new_conversation()
