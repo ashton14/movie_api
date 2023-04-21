@@ -39,8 +39,8 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
     """
 
 
-    if (db.characters[conversation.character_1_id][movie_id] != movie_id or  
-            db.characters[conversation.character_2_id][movie_id] != movie_id):
+    if (db.characters[conversation.character_1_id].movie_id != movie_id or  
+            db.characters[conversation.character_2_id].movie_id != movie_id):
         raise HTTPException(status_code=422, detail="character not in movie.")
     
     if conversation.character_1_id == conversation.character_2_id:
