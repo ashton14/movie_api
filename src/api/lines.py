@@ -8,10 +8,10 @@ import re, urllib.parse
 router = APIRouter()
 
 def other_lines(id: int):
-    convo_id = db.lines[id]["conversation_id"]
+    convo_id = db.lines[id].convo_id
     num_lines = 0
     for line in db.lines.values():
-        if line["conversation_id"] == convo_id:
+        if line.convo_id == convo_id:
             num_lines += 1
     
     return num_lines
@@ -39,10 +39,10 @@ def get_line(id: str):
     if int(id) not in db.lines.keys():
         raise HTTPException(status_code=404, detail="line not found.")
     
-    words = re.findall(r'\w+', db.lines.get(int(id))["line_text"])
+    words = re.findall(r'\w+', db.lines[int(id)].line_text)
     num_words = len(words)
 
-    sentences = re.split('[.?!]+', db.lines[int(id)]["line_text"])
+    sentences = re.split('[.?!]+', db.lines[int(id)].line_text)
     sentences = [s for s in sentences if s != '']
     num_sentences = len(sentences)
 
@@ -54,9 +54,9 @@ def get_line(id: str):
 
     json = {
         "line_id": int(id),
-        "character": db.characters[db.lines[int(id)]["character_id"]]["name"],
-        "age": db.characters[db.lines[int(id)]["character_id"]]["age"] or None,
-        "movie": db.movies[db.lines[int(id)]["movie_id"]]["title"],
+        "character": db.characters[db.lines[int(id)].c_id].name,
+        "age": db.characters[db.lines[int(id)].c_id].age or None,
+        "movie": db.movies[db.lines[int(id)].movie_id].title,
         "line_info": line_info
     }
 
