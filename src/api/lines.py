@@ -39,7 +39,7 @@ def get_line(id: str):
     if int(id) not in db.lines.keys():
         raise HTTPException(status_code=404, detail="line not found.")
     
-    words = re.findall(r'\w+', db.lines[int(id)]["line_text"])
+    words = re.findall(r'\w+', db.lines.get(int(id))["line_text"])
     num_words = len(words)
 
     sentences = re.split('[.?!]+', db.lines[int(id)]["line_text"])
