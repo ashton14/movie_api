@@ -7,10 +7,11 @@ import re, urllib.parse
 
 router = APIRouter()
 
-def other_lines(id: str):
+def other_lines(id: int):
+    convo_id = db.lines[id]["conversation_id"]
     num_lines = 0
     for line in db.lines.values():
-        if line[2] == id:
+        if line["conversation_id"] == convo_id:
             num_lines += 1
     
     return num_lines
@@ -31,37 +32,33 @@ def get_line(id: str):
     The line info is represented by a dictionary with the following keys:
     * `num_words`: the number of words in the line.
     * `num_sentences`: the number of sentences in the line.
-    * `num_other_lines`: The number of other lines in the same conversation
+    * `num_other_lines`: The total number of lines in the conversation
     """
-    
-    if id not in db.lines:
+
+
+    if int(id) not in db.char_lines:
         raise HTTPException(status_code=404, detail="line not found.")
     
-    words = re.findall(r'\w+', db.lines[id][4])
+    words = re.findall(r'\w+', db.lines[int(id)]["line_text"])
     num_words = len(words)
 
-    sentences = re.split('[.?!]+', db.lines[id][4])
+    sentences = re.split('[.?!]+', db.lines[int(id)]["line_text"])
     sentences = [s for s in sentences if s != '']
     num_sentences = len(sentences)
 
     line_info = {
         "num_words": num_words,
         "num_sentences": num_sentences,
-        "num_other_lines": other_lines(id)
+        "num_other_lines": other_lines(int(id))
     }
 
     json = {
         "line_id": int(id),
-        "line": db.lines[id][4],
-        "character": db.characters[db.lines[id][0]][0],
-        "age": db.characters[db.lines[id][0]][3] if db.characters[db.lines[id][0]][3] != "" else None,
-        "movie": db.movies[db.lines[id][1]][0],
+        "character": db.characters[db.lines[int(id)]["character_id"]]["name"],
+        "age": db.characters[db.lines[int(id)]["character_id"]]["age"] or None,
+        "movie": db.movies[db.lines[int(id)]["movie_id"]]["title"],
         "line_info": line_info
     }
-
-    
-    if json is None:
-        raise HTTPException(status_code=404, detail="movie not found.")
 
     return json
 

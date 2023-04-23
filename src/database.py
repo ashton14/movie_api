@@ -145,21 +145,20 @@ with open("conversations.csv", mode="r", encoding="utf8") as csv_file:
         )
         conversations[conv.id] = conv
 
-with open("lines.csv", mode="r", encoding="utf8") as csv_file:
-    lines = {}
-    for row in csv.DictReader(csv_file, skipinitialspace=True):
-        line = Line(
-            try_parse(int, row["line_id"]),
-            try_parse(int, row["character_id"]),
-            try_parse(int, row["movie_id"]),
-            try_parse(int, row["conversation_id"]),
-            try_parse(int, row["line_sort"]),
-            row["line_text"],
-        )
-        lines[line.id] = line
-        c = characters.get(line.c_id)
-        if c:
-            c.num_lines += 1
+lines = {}
+for row in char_lines:
+    line = Line(
+        try_parse(int, row["line_id"]),
+        try_parse(int, row["character_id"]),
+        try_parse(int, row["movie_id"]),
+        try_parse(int, row["conversation_id"]),
+        try_parse(int, row["line_sort"]),
+        row["line_text"],
+    )
+    lines[line.id] = line
+    c = characters.get(line.c_id)
+    if c:
+        c.num_lines += 1
 
         conv = conversations.get(line.conv_id)
         if conv:
