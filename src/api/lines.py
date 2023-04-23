@@ -24,6 +24,7 @@ def get_line(id: str):
     it returns:
     * `line_id`: the internal id of the line. Can be used to query the
       `/lines/{line_id}` endpoint.
+    * `text`: The text of the line.
     * `character`: The name of the character that said the line.
     * `age`: The age of the character.
     * `movie`: The movie the line is from.
@@ -54,6 +55,7 @@ def get_line(id: str):
 
     json = {
         "line_id": int(id),
+        "text": db.lines[int(id)].line_text,
         "character": db.characters[db.lines[int(id)].c_id].name,
         "age": db.characters[db.lines[int(id)].c_id].age or None,
         "movie": db.movies[db.lines[int(id)].movie_id].title,
