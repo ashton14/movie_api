@@ -32,5 +32,24 @@ def test_add_conversation():
     assert db.convos[len(db.convos)-1]["character1_id"] == convo["character_1_id"]
 
 
-#def test_add_conversation1():
+def test_add_conversation1():
     
+    convo = {
+        "character_1_id": 631,
+        "character_2_id": 641,
+        "lines": [
+            {
+            "character_id": 631,
+            "line_text": "My name is" + db.characters[631].name
+            },
+            {
+            "character_id": 641,
+            "line_text": "My name is" + db.characters[641].name
+            }
+        ]
+}
+    response = client.post("/movies/40/conversations/", json=convo)
+    assert response.status_code == 200
+
+
+    assert db.char_lines[len(db.char_lines)-1]["character_id"] == convo["character_2_id"]

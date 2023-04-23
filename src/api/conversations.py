@@ -62,11 +62,10 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
     
     db.upload_new_conversation()
 
-    i = 1
     line_sort = 1
     for l in conversation.lines:
 
-        next_line_id = int(db.char_lines[len(db.char_lines)-1]["line_id"]) + i
+        next_line_id = int(db.char_lines[len(db.char_lines)-1]["line_id"]) + 1
 
         db.char_lines.append({"line_id": next_line_id,
                         "character_id": l.character_id,
@@ -75,7 +74,6 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
                         "line_sort": line_sort,
                         "line_text": l.line_text
                         })
-        i += 1
         line_sort += 1
     
     db.upload_new_lines()
