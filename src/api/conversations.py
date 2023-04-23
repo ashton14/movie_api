@@ -69,13 +69,15 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
         next_line_id = db.lines[next(reversed(db.lines.keys()))].id + i
 
         db.char_lines.append({"line_id": next_line_id,
-                        "character_id": line.character_id,
+                        "character_id": l.character_id,
                         "movie_id": movie_id,
                         "conversation_id": next_convo_id,
                         "line_sort": line_sort,
-                        "line_text": line.line_text
+                        "line_text": l.line_text
                         })
         i += 1
         line_sort += 1
     
     db.upload_new_lines()
+
+    return next_convo_id
