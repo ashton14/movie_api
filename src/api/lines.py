@@ -105,9 +105,9 @@ def list_lines(
 
         l = {
             "line_id": line,
-            "text": value[4],
-            "movie": db.movies[value[1]][0],
-            "character": db.characters[value[0]][0]
+            "text": value.line_text,
+            "movie": db.movies[value.movie_id].title,
+            "character": db.characters[value.c_id].name
         }
         lines.append(l)
 
@@ -157,43 +157,43 @@ def list_lines_from_source(
 
     if source == "character":
         
-        for character, value in db.characters.items():
-            if urllib.parse.unquote(name).lower() == value[0].lower():
-                id = character
+        for character in db.characters.values():
+            if urllib.parse.unquote(name).lower() == character.name.lower():
+                id = character.id
                 name_found = True
                 break
 
         if name_found == False:
             raise HTTPException(status_code=404, detail="character not found.")    
         
-        for l, v in db.lines.items():
-            if v[0] == id:
+        for l in db.lines.values():
+            if l.c_id == id:
                 line = {
-                    "line_id": l,
-                    "text": v[4],
-                    "movie": db.movies[v[1]][0],
-                    "character": db.characters[v[0]][0]
+                    "line_id": l.id,
+                    "text": l.line_text,
+                    "movie": db.movies[l.movie_id].title,
+                    "character": db.characters[id].name
                 }
                 lines.append(line)
 
     if source == "movie":
 
-        for movie, value in db.movies.items():
-            if urllib.parse.unquote(name).lower() == value[0].lower():
-                id = movie
+        for movie in db.movies.values():
+            if urllib.parse.unquote(name).lower() == movie.name.lower():
+                id = movie.id
                 name_found = True
                 break
 
         if name_found == False:
-            raise HTTPException(status_code=404, detail="movie not found.")
-            
-        for l, v in db.lines.items():
-            if v[1] == id:
+            raise HTTPException(status_code=404, detail="movie not found.")    
+        
+        for l in db.lines.values():
+            if l.movie_id == id:
                 line = {
-                    "line_id": l,
-                    "text": v[4],
-                    "movie": db.movies[id][0],
-                    "character": db.characters[v[0]][0]
+                    "line_id": l.id,
+                    "text": l.line_text,
+                    "movie": db.movies[l.movie_id].title,
+                    "character": db.characters[id].name
                 }
                 lines.append(line)
 
