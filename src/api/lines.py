@@ -8,10 +8,10 @@ import re, urllib.parse
 router = APIRouter()
 
 def other_lines(id: int):
-    convo_id = db.lines[id].convo_id
+    convo_id = db.lines[id].conv_id
     num_lines = 0
     for line in db.lines.values():
-        if line.convo_id == convo_id:
+        if line.conv_id == convo_id:
             num_lines += 1
     
     return num_lines
