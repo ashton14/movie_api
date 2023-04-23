@@ -36,7 +36,7 @@ def get_line(id: str):
     """
 
 
-    if int(id) not in db.char_lines:
+    if int(id) not in db.lines.keys:
         raise HTTPException(status_code=404, detail="line not found.")
     
     words = re.findall(r'\w+', db.lines[int(id)]["line_text"])
