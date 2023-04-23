@@ -52,7 +52,7 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
             raise HTTPException(status_code=422, detail="lines do not reference characters.")
         
 
-    next_convo_id = db.convos[len(db.convos)-1]["conversation_id"] + 1
+    next_convo_id = int(db.convos[len(db.convos)-1]["conversation_id"]) + 1
 
     db.convos.append({"conversation_id": next_convo_id,
                        "character1_id": conversation.character_1_id,
@@ -66,7 +66,7 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
     line_sort = 1
     for l in conversation.lines:
 
-        next_line_id = db.char_lines[len(db.char_lines)-1]["line_id"] + i
+        next_line_id = int(db.char_lines[len(db.char_lines)-1]["line_id"]) + i
 
         db.char_lines.append({"line_id": next_line_id,
                         "character_id": l.character_id,
