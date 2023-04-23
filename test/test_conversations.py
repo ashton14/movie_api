@@ -40,11 +40,11 @@ def test_add_conversation1():
         "lines": [
             {
             "character_id": 631,
-            "line_text": "My name is" + db.characters[631].name
+            "line_text": "My name is " + db.characters[631].name
             },
             {
             "character_id": 641,
-            "line_text": "My name is" + db.characters[641].name
+            "line_text": "My name is " + db.characters[641].name
             }
         ]
 }
@@ -53,3 +53,4 @@ def test_add_conversation1():
 
 
     assert db.char_lines[len(db.char_lines)-1]["character_id"] == convo["character_2_id"]
+    
