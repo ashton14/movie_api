@@ -179,7 +179,7 @@ def list_lines_from_source(
     if source == "movie":
 
         for movie in db.movies.values():
-            if urllib.parse.unquote(name).lower() == movie.name.lower():
+            if urllib.parse.unquote(name).lower() == movie.title.lower():
                 id = movie.id
                 name_found = True
                 break
