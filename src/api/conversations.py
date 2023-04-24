@@ -60,7 +60,9 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
                        "movie_id": movie_id
                        })
     
-    db.upload_new_conversation()
+    db.upload_new_conversation() # This would fail upon multiple simultaneous calls 
+                                 # because the file would be read with one call before 
+                                 # the new data is posted in the other call
 
     line_sort = 1
     for l in conversation.lines:
@@ -76,6 +78,8 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
                         })
         line_sort += 1
     
-    db.upload_new_lines()
+    db.upload_new_lines()       # This would fail upon multiple simultaneous calls 
+                                # because the file would be read with one call before 
+                                # the new data is posted in the other call
 
     return next_convo_id
