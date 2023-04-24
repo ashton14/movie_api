@@ -4,7 +4,6 @@ from src.api.server import app
 
 from src import database as db
 
-import json
 
 client = TestClient(app)
 
