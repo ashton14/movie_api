@@ -193,7 +193,7 @@ def list_lines_from_source(
                     "line_id": l.id,
                     "text": l.line_text,
                     "movie": db.movies[l.movie_id].title,
-                    "character": db.characters[id].name
+                    "character": db.characters[l.c_id].name
                 }
                 lines.append(line)
 
