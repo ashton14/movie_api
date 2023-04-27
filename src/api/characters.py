@@ -70,11 +70,7 @@ def get_character(id: int):
         INNER JOIN movies m ON c.movie_id = m.movie_id
         WHERE c.character_id = id """
     
-    with db.engine.begin() as conn:
-        result = conn.execute(sqlalchemy.text(sql))
-        for character_id, name, created_at in result:
-            print(f"id: {character_id}, name: {name}, create_at: {created_at}")
-
+    
     """
     character = db.characters.get(id)
 

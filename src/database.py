@@ -30,7 +30,7 @@ conversations = sqlalchemy.Table("conversations", metadata_obj, autoload_with=en
 lines = sqlalchemy.Table("lines", metadata_obj, autoload_with=engine)
 
 
-
+"""
 # DO NOT CHANGE THIS TO BE HARDCODED. ONLY PULL FROM ENVIRONMENT VARIABLES.
 dotenv.load_dotenv()
 supabase_api_key = os.environ.get("SUPABASE_API_KEY")
@@ -132,7 +132,7 @@ def try_parse(type, val):
     except ValueError:
         return None
 
-"""
+
 with open("movies.csv", mode="r", encoding="utf8") as csv_file:
     movies = {
         try_parse(int, row["movie_id"]): Movie(
