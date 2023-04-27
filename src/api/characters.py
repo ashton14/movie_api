@@ -1,14 +1,16 @@
 from fastapi import APIRouter, HTTPException
 from enum import Enum
 from collections import Counter
-
+import sqlalchemy
 from fastapi.params import Query
 from src import database as db
+
 
 router = APIRouter()
 
 
 def get_top_conv_characters(character):
+    
     c_id = character.id
     movie_id = character.movie_id
     all_convs = filter(
@@ -47,6 +49,33 @@ def get_character(id: int):
       originally queried character.
     """
 
+    sql = """SELECT c.character_id, c.name AS character, m.title AS movie, c.gender, 
+        (
+        SELECT JSON_ARRAYAGG(
+            JSON_OBJECT(
+            'character_id', cc.character_id,
+            'character', cc.name,
+            'gender', cc.gender,
+            'number_of_lines_together', COUNT(l.line_id)
+            )
+            ORDER BY COUNT(l.line_id) DESC
+        )
+        FROM conversations co
+        INNER JOIN characters cc ON (cc.character_id = co.character1_id OR cc.character_id = co.character2_id) AND cc.character_id != c.character_id
+        INNER JOIN lines l ON (l.character_id = c.character_id AND l.conversation_id = co.conversation_id) AND l.character_id != cc.character_id
+        WHERE co.movie_id = c.movie_id
+        GROUP BY cc.character_id
+        ) AS top_conversations
+        FROM characters c
+        INNER JOIN movies m ON c.movie_id = m.movie_id
+        WHERE c.character_id = id """
+    
+    with db.engine.begin() as conn:
+        result = conn.execute(sqlalchemy.text(sql))
+        for character_id, name, created_at in result:
+            print(f"id: {character_id}, name: {name}, create_at: {created_at}")
+
+    """
     character = db.characters.get(id)
 
     if character:
@@ -69,7 +98,7 @@ def get_character(id: int):
         return result
 
     raise HTTPException(status_code=404, detail="character not found.")
-
+"""
 
 class character_sort_options(str, Enum):
     character = "character"

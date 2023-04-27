@@ -5,6 +5,32 @@ import io
 from supabase import Client, create_client
 import dotenv
 
+from sqlalchemy import create_engine
+import os
+import dotenv
+import sqlalchemy
+
+
+
+def database_connection_url():
+    dotenv.load_dotenv()
+    DB_USER: str = os.environ.get("POSTGRES_USER")
+    DB_PASSWD = os.environ.get("POSTGRES_PASSWORD")
+    DB_SERVER: str = os.environ.get("POSTGRES_SERVER")
+    DB_PORT: str = os.environ.get("POSTGRES_PORT")
+    DB_NAME: str = os.environ.get("POSTGRES_DB")
+    return f"postgresql://{DB_USER}:{DB_PASSWD}@{DB_SERVER}:{DB_PORT}/{DB_NAME}"
+
+engine = sqlalchemy.create_engine(database_connection_url())
+
+metadata_obj = sqlalchemy.MetaData()
+characters = sqlalchemy.Table("characters", metadata_obj, autoload_with=engine)
+movies = sqlalchemy.Table("movies", metadata_obj, autoload_with=engine)
+conversations = sqlalchemy.Table("conversations", metadata_obj, autoload_with=engine)
+lines = sqlalchemy.Table("lines", metadata_obj, autoload_with=engine)
+
+
+
 # DO NOT CHANGE THIS TO BE HARDCODED. ONLY PULL FROM ENVIRONMENT VARIABLES.
 dotenv.load_dotenv()
 supabase_api_key = os.environ.get("SUPABASE_API_KEY")
@@ -106,7 +132,7 @@ def try_parse(type, val):
     except ValueError:
         return None
 
-
+"""
 with open("movies.csv", mode="r", encoding="utf8") as csv_file:
     movies = {
         try_parse(int, row["movie_id"]): Movie(
@@ -163,3 +189,4 @@ for row in char_lines:
         conv = conversations.get(line.conv_id)
         if conv:
             conv.num_lines += 1
+    """
