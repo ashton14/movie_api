@@ -186,7 +186,7 @@ def list_characters(
             db.characters.c.character_id,
             db.characters.c.name,
             db.movies.c.title,
-            func.count(db.lines.c.id).label("num_lines")
+            func.count(db.lines.c.line_id).label("num_lines")
             )
         .select_from(
         outerjoin(db.characters,db.movies.c.movie_id == db.characters.c.movie_id)
@@ -198,7 +198,7 @@ def list_characters(
         )
         .limit(limit)
         .offset(offset)
-        .order_by(order_by, db.charcaters.c.character_id)
+        .order_by(order_by, db.characters.c.character_id)
     )
 
     # filter only if name parameter is passed
