@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from enum import Enum
 from collections import Counter
 import sqlalchemy
+from sqlalchemy import select, func, outerjoin, join
 from fastapi.params import Query
 from src import database as db
 
@@ -9,8 +10,44 @@ from src import database as db
 router = APIRouter()
 
 
-def get_top_conv_characters(character):
+def get_top_conv_characters(id: str):
     
+    chars = []
+    subq = select([db.conversations.c.character1_id.label('character_id')]).where(
+            db.conversations.c.character2_id == id).union(
+            select(db.conversations.c.character2_id.label('character_id')).where(
+            db.conversations.c.character1_id == id)
+            ).alias()
+    lines_subq = select([db.lines.c.conversation_id,
+                        db.lines.c.character_id,
+                        func.count().label('num_lines')]
+                    ).select_from(db.lines.join(subq, subq.c.character_id == db.lines.c.character_id)
+                                    ).group_by(db.lines.c.conversation_id, db.lines.c.character_id
+                                            ).alias()
+
+    with db.engine.connect() as conn:
+        query = select([subq.c.character_id,
+                        db.characters.c.name,
+                        db.characters.c.gender,
+                        lines_subq.c.num_lines]
+                    ).select_from(subq.join(db.characters, subq.c.character_id == db.characters.c.character_id)
+                                    .join(lines_subq, (lines_subq.c.conversation_id == db.conversations.c.conversation_id)
+                                        & ((db.characters.c.character_id == db.conversations.c.character1_id)
+                                            | (db.characters.c.character_id == db.conversations.c.character2_id))))
+        result = conn.execute(query)
+        for row in result:
+            chars.append(
+                {
+                "character_id": row.character_id,
+                "character": row.name,
+                "gender": row.gender,
+                "num_lines": row.num_lines
+            }
+            )
+
+    return chars    
+
+    """
     c_id = character.id
     movie_id = character.movie_id
     all_convs = filter(
@@ -25,6 +62,7 @@ def get_top_conv_characters(character):
         line_counts[other_id] += conv.num_lines
 
     return line_counts.most_common()
+    """
 
 
 @router.get("/characters/{id}", tags=["characters"])
@@ -49,27 +87,31 @@ def get_character(id: int):
       originally queried character.
     """
 
-    sql = """SELECT c.character_id, c.name AS character, m.title AS movie, c.gender, 
-        (
-        SELECT JSON_ARRAYAGG(
-            JSON_OBJECT(
-            'character_id', cc.character_id,
-            'character', cc.name,
-            'gender', cc.gender,
-            'number_of_lines_together', COUNT(l.line_id)
-            )
-            ORDER BY COUNT(l.line_id) DESC
+    stmt = (
+        sqlalchemy.select(
+            db.characters.c.character_id, 
+            db.characters.c.name, 
+            db.movies.c.title,
+            db.characters.c.gender
+        ).select_from(
+            outerjoin(db.characters, db.movies, db.characters.c.movie_id == db.movies.c.movie_id)
+        ).where(
+            db.characters.c.character_id == id
         )
-        FROM conversations co
-        INNER JOIN characters cc ON (cc.character_id = co.character1_id OR cc.character_id = co.character2_id) AND cc.character_id != c.character_id
-        INNER JOIN lines l ON (l.character_id = c.character_id AND l.conversation_id = co.conversation_id) AND l.character_id != cc.character_id
-        WHERE co.movie_id = c.movie_id
-        GROUP BY cc.character_id
-        ) AS top_conversations
-        FROM characters c
-        INNER JOIN movies m ON c.movie_id = m.movie_id
-        WHERE c.character_id = id """
-    
+    )
+
+    with db.engine.connect() as conn:
+        result = conn.execute(stmt)
+        json = {
+            "character_id": result.character_id,
+            "character": result.name,
+            "movie": result.title,
+            "gender": result.gender,
+            "top_conversations": get_top_conv_characters(id)
+        }
+            
+
+    return json
     
     """
     character = db.characters.get(id)
@@ -130,7 +172,54 @@ def list_characters(
     maximum number of results to return. The `offset` query parameter specifies the
     number of results to skip before returning results.
     """
+    if sort is character_sort_options.character:
+        order_by = db.characters.c.name
+    elif sort is character_sort_options.movie:
+        order_by = db.movies.c.title
+    elif sort is character_sort_options.number_of_lines:
+        order_by = "num_lines"
+    else:
+        assert False
 
+    stmt = (
+        sqlalchemy.select(
+            db.characters.c.character_id,
+            db.characters.c.name,
+            db.movies.c.title,
+            func.count(db.lines.c.id).label("num_lines")
+            )
+        .select_from(
+        outerjoin(db.characters,db.movies.c.movie_id == db.characters.c.movie_id)
+        .group_by(
+            db.lines.c.character_id,
+            db.lines.c.movie_id,
+            db.movies.c.title
+            )
+        )
+        .limit(limit)
+        .offset(offset)
+        .order_by(order_by, db.charcaters.c.character_id)
+    )
+
+    # filter only if name parameter is passed
+    if name != "":
+        stmt = stmt.where(db.characters.c.name.ilike(f"%{name}%"))
+
+    with db.engine.connect() as conn:
+        result = conn.execute(stmt)
+        json = []
+        for row in result:
+            json.append(
+                {
+                    "character_id": row.character_id,
+                    "character": row.name,
+                    "movie": row.title,
+                    "num_lines": row.num_lines,
+                }
+            )
+
+    return json
+    """
     if name:
 
         def filter_fn(c):
@@ -163,3 +252,4 @@ def list_characters(
         for c in items[offset : offset + limit]
     )
     return json
+    """

@@ -22,6 +22,31 @@ def get_movie(movie_id: int):
     * `num_lines`: The number of lines the character has in the movie.
     """
 
+
+    stmt = (
+        sqlalchemy.select(
+            db.movies.c.movie_id,
+            db.movies.c.title,
+            #top chars
+            ).where(db.movies.c.movie_id == movie_id)
+        )
+
+    if movie is None:
+        raise HTTPException(status_code=404, detail="Movie not found")
+
+    top_characters = sorted(movie.characters, key=lambda c: len(c.lines), reverse=True)[:5]
+    top_characters_data = [{
+        "character_id": character.id,
+        "character": character.name,
+        "num_lines": len(character.lines)
+    } for character in top_characters]
+
+    return {
+        "movie_id": int(movie_id),
+        "title": movie.title,
+        "top_characters": top_characters_data
+    }
+    """
     movie = db.movies.get(movie_id)
     if movie:
         top_chars = [
@@ -40,7 +65,7 @@ def get_movie(movie_id: int):
 
     raise HTTPException(status_code=404, detail="movie not found.")
 
-
+"""
 class movie_sort_options(str, Enum):
     movie_title = "movie_title"
     year = "year"

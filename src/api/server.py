@@ -22,7 +22,14 @@ You can:
 * **list lines with sorting and filtering options.**
 * **retrieve a specific line by id**
 * **list lines from a specific source
+
+## Conversations
+
+You can:
+* **add a new conversation**
 """
+
+
 tags_metadata = [
     {
         "name": "characters",
@@ -35,6 +42,10 @@ tags_metadata = [
     {
         "name": "lines",
         "description": "Access information on lines from movies.",
+    },
+    {
+        "name": "conversations",
+        "description": "Upload information on conversations from movies.",
     }
 ]
 
