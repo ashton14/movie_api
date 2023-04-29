@@ -31,6 +31,7 @@ def get_movie(movie_id: int):
             ).where(db.movies.c.movie_id == movie_id)
         )
 
+    """
     if movie is None:
         raise HTTPException(status_code=404, detail="Movie not found")
 
@@ -46,7 +47,7 @@ def get_movie(movie_id: int):
         "title": movie.title,
         "top_characters": top_characters_data
     }
-    """
+    
     movie = db.movies.get(movie_id)
     if movie:
         top_chars = [
