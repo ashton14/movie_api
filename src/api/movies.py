@@ -3,8 +3,41 @@ from enum import Enum
 from src import database as db
 from fastapi.params import Query
 import sqlalchemy
+from sqlalchemy import func, desc
 
 router = APIRouter()
+
+def get_top_chars(movie_id: int):
+
+    chars = []
+    c = sqlalchemy.select(
+        db.characters.c.character_id,
+        db.characters.c.name,
+        func.count(db.lines.c.line_id).label("num_lines")
+        ).select_from(
+        db.characters.join(db.lines).join(db.movies)
+    ).where(
+        db.movies.c.movie_id == movie_id).group_by(
+        db.characters.c.character_id,
+        db.characters.c.name
+    ).order_by(desc("num_lines"))
+        
+    
+
+    with db.engine.connect() as conn:
+        result = conn.execute(c)
+        for row in result:
+            char = {
+                "character_id": row.character_id,
+                "character": row.name,
+                "num_lines": row.num_lines
+            }
+            chars.append(char)
+
+    return chars[0:5]
+
+
+
 
 
 @router.get("/movies/{movie_id}", tags=["movies"])
@@ -27,9 +60,23 @@ def get_movie(movie_id: int):
         sqlalchemy.select(
             db.movies.c.movie_id,
             db.movies.c.title,
-            #top chars
-            ).where(db.movies.c.movie_id == movie_id)
+            ).select_from(db.movies)
+            .where(db.movies.c.movie_id == movie_id)
         )
+    
+    with db.engine.connect() as conn:
+        result = conn.execute(stmt).fetchone()
+        if result is None:
+            raise HTTPException(422,"Movie not found.")
+        json = {
+            "movie_id": result.movie_id,
+            "title": result.title,
+            "top_characters": get_top_chars(movie_id)
+        }
+
+    return json
+
+
 
     """
     if movie is None:

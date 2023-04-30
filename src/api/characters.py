@@ -13,23 +13,30 @@ router = APIRouter()
 def get_top_conv_characters(id: str):
     
     chars = []
-    subq = select([db.conversations.c.character1_id.label('character_id')]).where(
+    subq = select(db.conversations.c.character1_id.label('character_id')).where(
             db.conversations.c.character2_id == id).union(
             select(db.conversations.c.character2_id.label('character_id')).where(
             db.conversations.c.character1_id == id)
             ).alias()
-    lines_subq = select([db.lines.c.conversation_id,
+    char_subq = select(db.characters.c.character_id,
+                       db.characters.c.name,
+                       db.characters.c.gender
+                       ).select_from(
+        subq.join(db.characters, subq.c.character_id == db.characters.c.character_id)
+                       )
+    
+    lines_subq = select(db.lines.c.conversation_id,
                         db.lines.c.character_id,
-                        func.count().label('num_lines')]
+                        func.count().label('num_lines')
                     ).select_from(db.lines.join(subq, subq.c.character_id == db.lines.c.character_id)
                                     ).group_by(db.lines.c.conversation_id, db.lines.c.character_id
                                             ).alias()
 
     with db.engine.connect() as conn:
-        query = select([subq.c.character_id,
+        query = select(subq.c.character_id,
                         db.characters.c.name,
                         db.characters.c.gender,
-                        lines_subq.c.num_lines]
+                        lines_subq.c.num_lines
                     ).select_from(subq.join(db.characters, subq.c.character_id == db.characters.c.character_id)
                                     .join(lines_subq, (lines_subq.c.conversation_id == db.conversations.c.conversation_id)
                                         & ((db.characters.c.character_id == db.conversations.c.character1_id)
@@ -101,7 +108,7 @@ def get_character(id: int):
     )
 
     with db.engine.connect() as conn:
-        result = conn.execute(stmt)
+        result = conn.execute(stmt).fetchone()
         json = {
             "character_id": result.character_id,
             "character": result.name,
@@ -189,17 +196,17 @@ def list_characters(
             func.count(db.lines.c.line_id).label("num_lines")
             )
         .select_from(
-        outerjoin(db.characters,db.movies, db.movies.c.movie_id == db.characters.c.movie_id)
+        outerjoin(db.characters,db.movies, db.movies.c.movie_id == db.characters.c.movie_id))
+        .join(db.lines, db.characters.c.character_id == db.lines.c.character_id)
         .group_by(
-            db.lines.c.character_id,
-            db.lines.c.movie_id,
-            db.movies.c.title
-            )
+            db.characters.c.character_id,
+            db.movies.c.title,
         )
         .limit(limit)
         .offset(offset)
         .order_by(order_by, db.characters.c.character_id)
     )
+    
 
     # filter only if name parameter is passed
     if name != "":
