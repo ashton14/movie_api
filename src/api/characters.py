@@ -189,7 +189,7 @@ def list_characters(
             func.count(db.lines.c.line_id).label("num_lines")
             )
         .select_from(
-        outerjoin(db.characters,db.movies.c.movie_id == db.characters.c.movie_id)
+        outerjoin(db.characters,db.movies, db.movies.c.movie_id == db.characters.c.movie_id)
         .group_by(
             db.lines.c.character_id,
             db.lines.c.movie_id,
