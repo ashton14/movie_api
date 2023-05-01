@@ -9,6 +9,7 @@ Movie API returns dialog statistics on top hollywood movies from decades past.
 You can:
 * **list characters with sorting and filtering options.**
 * **retrieve a specific character by id**
+* **add a new conversation by request body**
 
 ## Movies
 
@@ -23,10 +24,6 @@ You can:
 * **retrieve a specific line by id**
 * **list lines from a specific source
 
-## Conversations
-
-You can:
-* **add a new conversation**
 """
 
 
@@ -42,10 +39,6 @@ tags_metadata = [
     {
         "name": "lines",
         "description": "Access information on lines from movies.",
-    },
-    {
-        "name": "conversations",
-        "description": "Upload information on conversations from movies.",
     }
 ]
 

@@ -13,42 +13,34 @@ router = APIRouter()
 def get_top_conv_characters(id: str):
     
     chars = []
-    subq = select(db.conversations.c.character1_id.label('character_id')).where(
+    subq = select(db.conversations.c.character1_id.label('character_id')).select_from(
+            db.conversations
+            ).where(
             db.conversations.c.character2_id == id).union(
-            select(db.conversations.c.character2_id.label('character_id')).where(
+            select(db.conversations.c.character2_id.label('character_id')).select_from(
+            db.conversations
+            ).where(
             db.conversations.c.character1_id == id)
             ).alias()
-    char_subq = select(db.characters.c.character_id,
+    
+    stmt = select(db.characters.c.character_id,
                        db.characters.c.name,
                        db.characters.c.gender
                        ).select_from(
         subq.join(db.characters, subq.c.character_id == db.characters.c.character_id)
                        )
     
-    lines_subq = select(db.lines.c.conversation_id,
-                        db.lines.c.character_id,
-                        func.count().label('num_lines')
-                    ).select_from(db.lines.join(subq, subq.c.character_id == db.lines.c.character_id)
-                                    ).group_by(db.lines.c.conversation_id, db.lines.c.character_id
-                                            ).alias()
 
     with db.engine.connect() as conn:
-        query = select(subq.c.character_id,
-                        db.characters.c.name,
-                        db.characters.c.gender,
-                        lines_subq.c.num_lines
-                    ).select_from(subq.join(db.characters, subq.c.character_id == db.characters.c.character_id)
-                                    .join(lines_subq, (lines_subq.c.conversation_id == db.conversations.c.conversation_id)
-                                        & ((db.characters.c.character_id == db.conversations.c.character1_id)
-                                            | (db.characters.c.character_id == db.conversations.c.character2_id))))
-        result = conn.execute(query)
+        
+        result = conn.execute(stmt)
         for row in result:
             chars.append(
                 {
                 "character_id": row.character_id,
                 "character": row.name,
                 "gender": row.gender,
-                "num_lines": row.num_lines
+                #"num_lines": row.num_lines
             }
             )
 

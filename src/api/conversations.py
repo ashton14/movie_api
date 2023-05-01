@@ -3,6 +3,8 @@ from src import database as db
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
+import sqlalchemy
+from sqlalchemy import func
 
 
 # FastAPI is inferring what the request body should look like
@@ -37,7 +39,51 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
 
     The endpoint returns the id of the resulting conversation that was created.
     """
+    char1_found = False
+    char2_found = False
 
+    char_subq = sqlalchemy.select(
+        db.characters.c.character_id
+        ).select_from(
+        db.characters
+        ).where(db.characters.c.movie_id == movie_id)
+    
+    with db.engine.connect() as conn:
+        chars = conn.execute(char_subq)
+        for char in chars:
+            if char.character_id == conversation.character_1_id:
+                char1_found = True
+            if char.character_id == conversation.character_2_id:
+                char2_found = True 
+            
+    if not char1_found and not char2_found:
+        raise HTTPException(422, "Character not part of referenced movie.")    
+
+    
+    if conversation.character_1_id == conversation.character_2_id:
+        raise HTTPException(status_code=422, detail="Characters are the same.")
+
+    for line in conversation.lines:
+        if (line.character_id != conversation.character_1_id and
+            line.character_id != conversation.character_2_id):
+            raise HTTPException(422, "Characters of lines do not match characters of conversation.")
+        
+
+    
+    
+        
+    with db.engine.connect() as conn:
+        conversation_id = conn.execute(db.conversations.insert().values(
+                                                    movie_id=movie_id,
+                                                    character1_id=conversation.character_1_id,
+                                                    character2_id=conversation.character_2_id))
+        for line in conversation.lines: 
+            conn.execute(db.lines.insert().values(conversation_id=conversation_id,
+                                                   character_id=line.character_id,
+                                                   line_text=line.line_text))
+    return conversation_id
+
+    """
 
     if (db.characters[conversation.character_1_id].movie_id != movie_id or  
             db.characters[conversation.character_2_id].movie_id != movie_id):
@@ -83,3 +129,4 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
                                 # the new data is posted in the other call
 
     return next_convo_id
+    """
