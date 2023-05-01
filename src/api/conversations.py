@@ -76,7 +76,7 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
         conversation_id = conn.execute(db.conversations.insert().values(
                                                     movie_id=movie_id,
                                                     character1_id=conversation.character_1_id,
-                                                    character2_id=conversation.character_2_id))
+                                                    character2_id=conversation.character_2_id)).inserted_primary_key[0]
         for line in conversation.lines: 
             conn.execute(db.lines.insert().values(conversation_id=conversation_id,
                                                    character_id=line.character_id,
