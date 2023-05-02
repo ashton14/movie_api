@@ -168,7 +168,7 @@ def list_lines(
         ).limit(limit).offset(offset).order_by(order_by, db.lines.c.line_text)
     
     if subtext != "":
-        stmt = stmt.where(db.lines.c.line_text.ilike(f"%{subtext}%"))
+        stmt = stmt.where(func.lower(db.lines.c.line_text).ilike(f"%{subtext.lower()}%"))
 
     with db.engine.connect() as conn:
         result = conn.execute(stmt)

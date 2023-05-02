@@ -9,6 +9,20 @@ from src import database as db
 
 router = APIRouter()
 
+def count_num_lines(id1: str, id2: str):
+    conversation_ids = sqlalchemy.select(
+            db.conversations.c.conversation_id).where(
+            ((db.conversations.c.character1_id == id1) & (db.conversations.c.character2_id == id2) |
+            (db.conversations.c.character1_id == id2) & (db.conversations.c.character2_id == id1))
+        ).alias()
+    
+    num_lines = sqlalchemy.select(func.count(db.lines.c.line_id).label("num_lines")).select_from(
+        db.lines.join(conversation_ids, db.lines.c.conversation_id == conversation_ids.c.conversation_id)
+        ).where(conversation_ids.c.conversation_id == db.lines.c.conversation_id)   
+    
+    with db.engine.connect() as conn:
+        return conn.execute(num_lines).fetchone().num_lines
+    
 
 def get_top_conv_characters(id: str):
     
@@ -25,7 +39,7 @@ def get_top_conv_characters(id: str):
     
     stmt = select(db.characters.c.character_id,
                        db.characters.c.name,
-                       db.characters.c.gender
+                       db.characters.c.gender,
                        ).select_from(
         subq.join(db.characters, subq.c.character_id == db.characters.c.character_id)
                        )
@@ -40,11 +54,11 @@ def get_top_conv_characters(id: str):
                 "character_id": row.character_id,
                 "character": row.name,
                 "gender": row.gender,
-                #"num_lines": row.num_lines
+                "num_lines": count_num_lines(id,row.character_id)
             }
             )
 
-    return chars    
+    return sorted(chars, key=lambda x: x['num_lines'], reverse=True)    
 
     """
     c_id = character.id
@@ -200,9 +214,8 @@ def list_characters(
     )
     
 
-    # filter only if name parameter is passed
     if name != "":
-        stmt = stmt.where(db.characters.c.name.ilike(f"%{name}%"))
+        stmt = stmt.where(func.lower(db.characters.c.name).ilike(f"%{name.lower()}%"))
 
     with db.engine.connect() as conn:
         result = conn.execute(stmt)

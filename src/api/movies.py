@@ -172,7 +172,7 @@ def list_movies(
 
     # filter only if name parameter is passed
     if name != "":
-        stmt = stmt.where(db.movies.c.title.ilike(f"%{name}%"))
+        stmt = stmt.where(func.lower(db.movies.c.title).ilike(f"%{name.lower()}%"))
 
     with db.engine.connect() as conn:
         result = conn.execute(stmt)

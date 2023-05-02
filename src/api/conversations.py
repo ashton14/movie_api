@@ -56,7 +56,7 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
             if char.character_id == conversation.character_2_id:
                 char2_found = True 
             
-    if not char1_found and not char2_found:
+    if not char1_found or not char2_found:
         raise HTTPException(422, "Character not part of referenced movie.")    
 
     
@@ -67,18 +67,20 @@ def add_conversation(movie_id: int, conversation: ConversationJson):
         if (line.character_id != conversation.character_1_id and
             line.character_id != conversation.character_2_id):
             raise HTTPException(422, "Characters of lines do not match characters of conversation.")
-        
-
-    
     
         
-    with db.engine.connect() as conn:
-        conversation_id = conn.execute(db.conversations.insert().values(
-                                                    movie_id=movie_id,
+    with db.engine.begin() as conn:
+        max_id = conn.execute(sqlalchemy.select(func.max(db.conversations.c.conversation_id))).scalar()
+        conversation_id = (max_id or 0) + 1
+        conn.execute(db.conversations.insert().values(conversation_id = conversation_id,
+                                                      movie_id=movie_id,
                                                     character1_id=conversation.character_1_id,
-                                                    character2_id=conversation.character_2_id)).inserted_primary_key[0]
+                                                    character2_id=conversation.character_2_id))
         for line in conversation.lines: 
-            conn.execute(db.lines.insert().values(conversation_id=conversation_id,
+            max_line_id = conn.execute(sqlalchemy.select(func.max(db.lines.c.line_id))).scalar()
+            line_id = (max_line_id or 0) + 1
+            conn.execute(db.lines.insert().values(line_id = line_id,
+                                                  conversation_id=conversation_id,
                                                    character_id=line.character_id,
                                                    line_text=line.line_text))
     return conversation_id
